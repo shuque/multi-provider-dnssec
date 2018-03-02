@@ -166,7 +166,7 @@
         online signing (also known as on-the-fly signing). However,
         another possible approach is to pre-compute all the possible
         response sets and associated signatures and then algorithmically
-        determine at query time which response set needs to returned.
+        determine at query time which response set needs to be returned.
         </t>
 
         <t>
