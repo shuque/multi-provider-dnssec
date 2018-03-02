@@ -230,9 +230,12 @@
         not perform zone signing, instead pushing out the zone (typically
         via zone transfer mechanisms) to multiple providers, and relying
         on those providers to sign the zone data before serving them out. 
-        This model is essentially a variation of Sign-and-Serve and has to 
-        address all the requirements of that category, so is not discussed
-        any further.
+        This model has to address the same set of requirements as the
+        Sign-and-Serve model regarding managing the DNSKEY and DS RRsets.
+        However, assuming standardized zone transfers mechanisms are
+        being used to push out the zone to the providers, it likely also
+        has the limitation that non-standardized DNS features cannot be
+        supported or signed. This model is not discussed further.
         </t>
 
       </section>
