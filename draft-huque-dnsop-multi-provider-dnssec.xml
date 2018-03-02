@@ -95,7 +95,7 @@
       <t>
         Many enterprises today employ the service of multiple
         DNS providers to distribute their authoritative DNS
-        service. Two providers is fairly typical and this allows
+        service. Two providers are fairly typical and this allows
         the DNS service to survive a complete failure of any
         single provider. This document outlines some possible
         models of DNSSEC deployment in such an environment.
@@ -104,6 +104,15 @@
 
 
     <section title="Deployment Models" anchor="models">
+
+      <t>
+      The two main models discussed are (1) where the zone owner
+      runs a master signing server and essentially treats the managed
+      DNS providers as secondary servers, the "Serve Only" model, and
+      (2) where the managed DNS providers each act like primary
+      servers, signing data received from the zone owner and serving
+      it out to DNS queriers, the "Sign and Serve" model.
+      </t>
 
       <section title="Serve Only model" anchor="serve-only">
         <t>
@@ -126,7 +135,7 @@
         non-standardized DNS features. Some of these features like
         DNS based Global Server Load Balancing (GSLB), dynamic
         failover pools, etc. rely on querier specific responses,
-        or responses based on realtime state examination, and so
+        or responses based on real-time state examination, and so,
         the answer and corresponding signature has to be determined
         at the authoritative server being queried, at the time
         of the query, or both.
@@ -142,9 +151,10 @@
         provider-specific APIs to update zone content at each of the
         providers, and relies on the provider to perform signing of
         the data. The main challenge here is to manage the contents of
-        the DNSKEY RRset in such a way that validating resolvers always
-        have a viable path to authenticate the DNSSEC signature chain no
-        matter which provider they query and obtain responses from.
+        the DNSKEY and DS RRset in such a way that validating resolvers
+        always have a viable path to authenticate the DNSSEC signature
+        chain no matter which provider they query and obtain responses
+        from.
         </t>
 
         <t>
@@ -160,7 +170,7 @@
         </t>
 
         <t>
-        In these models, the function of co-ordinating the DNSKEY
+        In these models, the function of coordinating the DNSKEY
         or DS RRset does not involve the providers communicating
         directly with each other, which they are unlikely to do
         since they typically have a contractual relationship only
@@ -180,7 +190,7 @@
         <t>Providers have an API that customer uses to query the ZSK
            public key, and insert a combined DNSKEY RRset that includes 
            both ZSKs and the KSK, signed by the KSK.</t>
-        <t>Key rollovers need co-ordinated customer participation to 
+        <t>Key rollovers need coordinated customer participation to
            update and re-sign the DNSKEY RRset.</t>
         </list>
         </t>
@@ -195,7 +205,7 @@
         <t>DNSKEY RRset is signed independently by each provider using
            their own KSK.</t>
         <t>Customer manages the DS record that includes both KSKs.</t>
-        <t>KSK rollovers need co-ordinated customer participation to
+        <t>KSK rollovers need coordinated customer participation to
            update the DS.</t>
         </list>
         </t>
@@ -203,7 +213,7 @@
 
         <section title="Model 3" anchor="ss-model3">
         <t>
-        Possible models in which KSK and/or ZSK keypairs are shared
+        Possible models in which KSK and/or ZSK key pairs are shared
         across providers are not currently discussed. Preliminary
         discussion with some providers has revealed that this is not a
         mode all of them are comfortable with, as they do not want to
@@ -211,10 +221,6 @@
         </t>
         </section>
 
-        <t>
-        (Also mention the model used by the Yeti project, which I think is
-        somewhat similar to model 1?)
-        </t>
 
       </section>
 
@@ -231,9 +237,6 @@
 
       </section>
 
-      <t>
-	[TBD]
-      </t>
     </section>
 
 
