@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!-- One method to get references from the online citation libraries.
+     There has to be one entity for each item to be referenced. 
+     An alternate method (rfc include) is described in the references. -->
+
+<!ENTITY RFC3552 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3552.xml">
+<!ENTITY RFC4033 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4033.xml">
+<!ENTITY RFC4034 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4034.xml">
+<!ENTITY RFC4035 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4035.xml">
+<!ENTITY I-D.narten-iana-considerations-rfc2434bis SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.narten-iana-considerations-rfc2434bis.xml">
+]>
+
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<!-- used by XSLT processors -->
+<!-- For a complete list and description of processing instructions (PIs), 
+     please see http://xml.resource.org/authoring/README.html. -->
+<!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
+     (Here they are set differently than their defaults in xml2rfc v1.32) -->
+<?rfc strict="yes" ?>
+<!-- give errors regarding ID-nits and DTD validation -->
+<!-- control the table of contents (ToC) -->
+<?rfc toc="yes"?>
+<!-- generate a ToC -->
+<?rfc tocdepth="4"?>
+<!-- the number of levels of subsections in ToC. default: 3 -->
+<!-- control references -->
+<?rfc symrefs="yes"?>
+<!-- use symbolic references tags, i.e, [RFC2119] instead of [1] -->
+<?rfc sortrefs="yes" ?>
+<!-- sort the reference entries alphabetically -->
+<!-- control vertical white space 
+     (using these PIs as follows is recommended by the RFC Editor) -->
+<?rfc compact="yes" ?>
+<!-- do not start each main section on a new page -->
+<?rfc subcompact="no" ?>
+<!-- keep one blank line between list items -->
+<!-- end of list of popular I-D processing instructions -->
+<rfc category="info" docName="draft-huque-dnsop-multi-provider-dnssec-00" ipr="trust200902">
+  <!-- category values: std, bcp, info, exp, and historic
+     ipr values: full3667, noModification3667, noDerivatives3667
+     you can add the attributes updates="NNNN" and obsoletes="NNNN" 
+     they will automatically be output with "(if approved)" -->
+
+  <!-- ***** FRONT MATTER ***** -->
+
+  <front>
+    <title abbrev="Multi Provider DNSSEC models">Multi Provider DNSSEC models</title>
+
+    <author fullname="Shumon Huque" initials="S." surname="Huque">
+      <organization>Salesforce</organization>
+      <address>
+        <email>shuque@gmail.com</email>
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+
+    <author fullname="Pallavi Aras" initials="P." surname="Aras">
+      <organization>Salesforce</organization>
+      <address>
+        <email>paras@salesforce.com</email>
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+
+    <date month="March" year="2018" />
+
+    <!-- Meta-data Declarations -->
+
+    <area>General</area>
+    <workgroup>Internet Engineering Task Force</workgroup>
+    <keyword>Internet-Draft</keyword>
+    <keyword>DNSSEC</keyword>
+    <keyword>Multiple</keyword>
+    <keyword>Provider</keyword>
+    <keyword>Models</keyword>
+
+    <abstract>
+      <t>
+        Many enterprises today employ the service of multiple
+        DNS providers to distribute their authoritative DNS
+        service. Deploying DNSSEC in such an environment can
+        have some challenges depending on the configuration and
+        feature set in use. This document will present several
+        deployment models that may be suitable.
+      </t>
+    </abstract>
+  </front>
+
+
+  <middle>
+
+
+    <section title="Introduction and Motivation">
+      <t>
+        Many enterprises today employ the service of multiple
+        DNS providers to distribute their authoritative DNS
+        service. Two providers is fairly typical and this allows
+        the DNS service to survive a complete failure of any
+        single provider. This document outlines some possible
+        models of DNSSEC deployment in such an environment.
+      </t>
+    </section>
+
+
+    <section title="Deployment Models" anchor="models">
+
+      <section title="Serve Only model" anchor="serve-only">
+        <t>
+        The most straightforward deployment model is one in which the
+        zone owner runs a primary master DNS server, and manages the
+        signing of zone data. The master server uses DNS zone transfer
+        mechanisms (AXFR/IXFR) to distribute the signed zone to multiple
+        DNS providers.
+        </t>
+        <t>
+        This is also arguably the most secure model because the
+        zone owner holds the private signing keys. The managed DNS
+        providers cannot serve bogus data (either maliciously or
+        because of compromise of their systems) without detection by
+        validating resolvers.
+        </t>
+        <t>
+        One notable limitation of this model is that it may not work
+        with DNS authoritative server configurations that use certain
+        non-standardized DNS features. Some of these features like
+        DNS based Global Server Load Balancing (GSLB), dynamic
+        failover pools, etc. rely on querier specific responses,
+        or responses based on realtime state examination, and so
+        the answer and corresponding signature has to be determined
+        at the authoritative server being queried, at the time
+        of the query, or both.
+        </t>
+      </section>
+
+
+      <section title="Sign and Serve models" anchor="sign-and-serve">
+
+        <t>
+        In this category of models, multiple providers each independently
+        sign and serve the same zone. The zone owner typically uses
+        provider-specific APIs to update zone content at each of the
+        providers, and relies on the provider to perform signing of
+        the data. The main challenge here is to manage the contents of
+        the DNSKEY RRset in such a way that validating resolvers always
+        have a viable path to authenticate the DNSSEC signature chain no
+        matter which provider they query and obtain responses from.
+        </t>
+
+        <t>
+        These models can support DNSSEC even for the non-standard 
+        features mentioned previously, if the DNS providers have the
+        capability of signing the response data generated by those
+        features. Since these responses are often generated dynamically
+        at query time, one method is for the provider to perform
+        online signing (also known as on-the-fly signing). However,
+        another possible approach is to pre-compute all the possible
+        response sets and associated signatures and then algorithmically
+        determine at query time which response set needs to returned.
+        </t>
+
+        <t>
+        In these models, the function of co-ordinating the DNSKEY
+        or DS RRset does not involve the providers communicating
+        directly with each other, which they are unlikely to do
+        since they typically have a contractual relationship only
+        with the customer.
+        </t>
+
+        <t>
+        The following descriptions consider the case of two DNS 
+        providers, but the model is generalizable to any number.
+        </t>
+
+        <section title="Model 1" anchor="ss-model1">
+        <t>
+        <list style="symbols">
+        <t>Customer holds the KSK and manages the DS record.</t>
+        <t>Each provider has their own ZSK which is used to sign data</t>
+        <t>Providers have an API that customer uses to query the ZSK
+           public key, and insert a combined DNSKEY RRset that includes 
+           both ZSKs and the KSK, signed by the KSK.</t>
+        <t>Key rollovers need co-ordinated customer participation to 
+           update and re-sign the DNSKEY RRset.</t>
+        </list>
+        </t>
+        </section>
+
+        <section title="Model 2" anchor="ss-model2">
+        <t>
+        <list style="symbols">
+        <t>Each provider has their own KSK and ZSK.</t>
+        <t>Each provider also includes the ZSK of the other provider -
+           delivered to them by the customer via some API mechanism</t>
+        <t>DNSKEY RRset is signed independently by each provider using
+           their own KSK.</t>
+        <t>Customer manages the DS record that includes both KSKs.</t>
+        <t>KSK rollovers need co-ordinated customer participation to
+           update the DS.</t>
+        </list>
+        </t>
+        </section>
+
+        <section title="Model 3" anchor="ss-model3">
+        <t>
+        Possible models in which KSK and/or ZSK keypairs are shared
+        across providers are not currently discussed. Preliminary
+        discussion with some providers has revealed that this is not a
+        mode all of them are comfortable with, as they do not want to
+        share signing keys with other parties.
+        </t>
+        </section>
+
+        <t>
+        (Also mention the model used by the Yeti project, which I think is
+        somewhat similar to model 1?)
+        </t>
+
+      </section>
+
+      <section title="Inline Signing models" anchor="inline-signing">
+        <t>
+        In this model, the zone owner runs a master server but does
+        not perform zone signing, instead pushing out the zone (typically
+        via zone transfer mechanisms) to multiple providers, and relying
+        on those providers to sign the zone data before serving them out. 
+        This model is essentially a variation of Sign-and-Serve and has to 
+        address all the requirements of that category, so is not discussed
+        any further.
+        </t>
+
+      </section>
+
+      <t>
+	[TBD]
+      </t>
+    </section>
+
+
+    <section title="Signing Algorithm Considerations" anchor="algorithms">
+
+      <t>
+	[TBD: at the very least we have to consider whether any or
+        all of these schemes require algorithms to be the same or not,
+        or benefit from algorithms being the same. Current DNS
+        specifications indicate that if there are multiple algorithms in
+        the DNSKEY RRset, then data records need to be signed with at
+        least one of each algorithm, (how does that work with online
+        signing?). Multiple signatures per record set is a cost that
+        probably few operators want to bear.]
+      </t>
+
+    </section>
+
+    <section title="Validating Resolver Behavior" anchor="resolver">
+
+      <t>
+	TBD
+      </t>
+
+    </section>
+
+    <section title="Key Rollover Considerations" anchor="keyrollover">
+
+      <t>
+	TBD
+      </t>
+
+    </section>
+
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>This document includes no request to IANA.</t>
+    </section>
+
+    <section anchor="Security" title="Security Considerations">
+      <t>
+	[TBD]
+      </t>
+    </section>
+  </middle>
+
+  <!--  *****BACK MATTER ***** -->
+
+  <back>
+    <references title="Normative References">
+      &RFC4033;
+      &RFC4034;
+      &RFC4035;
+    </references>
+
+    <references title="Informative References">
+      &RFC3552;
+    </references>
+  </back>
+
+</rfc>
