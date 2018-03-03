@@ -147,7 +147,7 @@
       </section>
 
 
-      <section title="Sign and Serve models" anchor="sign-and-serve">
+      <section title="Sign and Serve model" anchor="sign-and-serve">
 
         <t>
         In this category of models, multiple providers each independently
@@ -228,7 +228,7 @@
 
       </section>
 
-      <section title="Inline Signing models" anchor="inline-signing">
+      <section title="Inline Signing model" anchor="inline-signing">
         <t>
         In this model, the zone owner runs a master server but does
         not perform zone signing, instead pushing out the zone (typically
