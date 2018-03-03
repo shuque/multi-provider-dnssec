@@ -250,7 +250,7 @@
     <section title="Signing Algorithm Considerations" anchor="algorithms">
 
       <t>
-	[TBD: at the very least we have to consider whether any or
+	[TBD: at the very least we have to note whether any or
         all of these schemes require algorithms to be the same or not,
         or benefit from algorithms being the same. Current DNS
         specifications indicate that if there are multiple algorithms in
@@ -269,10 +269,11 @@
 	From the point of view of the Validating Resolver, the
         <xref target="sign-and-serve">Sign and Serve models</xref>,
         that employ multiple providers signing the same zone data with
-        distinct keys, is the most interesting. In these models, for
+        distinct keys, are the most interesting. In these models, for
         each provider, the Zone Signing Keys of the other providers are
         imported into the DNSKEY RRset and the DNSKEY RRset is re-signed.
-        If this is not done, the following situation can arise:
+        If this is not done, the following situation can arise (assuming
+        two providers A and B):
 
         <list style="symbols">
         <t>The validating resolver follows a referral (delegation) to the
@@ -285,15 +286,17 @@
         <t>It queries one of provider B's nameservers to resolve the
         name, and obtains a response that is signed by provider B's
         ZSK, which it cannot authenticate because this ZSK is not present
-        in its cached DNSKEY RRset for the zone.</t>
+        in its cached DNSKEY RRset for the zone that it received from
+        provider A.</t>
         <t>The resolver will not accept this response. It may still
         be able to ultimately authenticate the name by querying other
         nameservers for the zone until it elicits a response from one
         of provider A's nameservers. But it has incurred the penalty
         of additional roundtrips with other nameservers, with the
-        corresponding latency and processing costs. The number of
-        additional roundtrips depends on details of the resolver's
-        nameserver selection algorithm.</t>
+        corresponding latency and processing costs. The exact number
+        of additional roundtrips depends on details of the resolver's
+        nameserver selection algorithm and the number of nameservers
+        configured at provider B.</t>
         <t>Zone owners will want to deploy a DNS service that responds
         as efficiently as possible with validatable answers, and hence
         it is important that the DNSKEY RRset is maintained with the
