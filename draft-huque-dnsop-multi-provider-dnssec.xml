@@ -215,7 +215,7 @@
         </t>
         </section>
 
-        <section title="Model 3" anchor="ss-model3">
+        <section title="Other Models" anchor="ss-other">
         <t>
         Possible models in which KSK and/or ZSK key pairs are shared
         across providers are not currently discussed. Preliminary
@@ -265,7 +265,61 @@
     <section title="Validating Resolver Behavior" anchor="resolver">
 
       <t>
-	TBD
+
+	From the point of view of the Validating Resolver, the
+        <xref target="sign-and-serve">Sign and Serve models</xref>,
+        that employ multiple providers signing the same zone data with
+        distinct keys, is the most interesting. In these models, for
+        each provider, the Zone Signing Keys of the other providers are
+        imported into the DNSKEY RRset and the DNSKEY RRset is re-signed.
+        If this is not done, the following situation can arise:
+
+        <list style="symbols">
+        <t>The validating resolver follows a referral (delegation) to the
+        zone in question.</t>
+        <t>It retrieves the zone's DNSKEY RRset from one of provider
+        A's nameservers.</t>
+        <t>At some point in time, the resolver attempts to resolve a
+        name in the zone, while the DNSKEY RRset received from provider A
+        is still viable in its cache.</t>
+        <t>It queries one of provider B's nameservers to resolve the
+        name, and obtains a response that is signed by provider B's
+        ZSK, which it cannot authenticate because this ZSK is not present
+        in its cached DNSKEY RRset for the zone.</t>
+        <t>The resolver will not accept this response. It may still
+        be able to ultimately authenticate the name by querying other
+        nameservers for the zone until it elicits a response from one
+        of provider A's nameservers. But it has incurred the penalty
+        of additional roundtrips with other nameservers, with the
+        corresponding latency and processing costs. The number of
+        additional roundtrips depends on details of the resolver's
+        nameserver selection algorithm.</t>
+        <t>Zone owners will want to deploy a DNS service that responds
+        as efficiently as possible with validatable answers, and hence
+        it is important that the DNSKEY RRset is maintained with the
+        ZSKs of all participating providers.</t>
+        </list>
+
+        As long as the DNSKEY RRset at each provider contains the
+        active ZSKs of all the providers, resolvers can validate
+        a response no matter which provider's nameservers it came
+        from.
+      </t>
+
+      <t>
+        Details of how the DNSKEY RRset itself is validated differs.
+        In <xref target="ss-model1">Sign and Serve model 1</xref>,
+        one unique KSK managed by the Zone Owner signs an identical
+        DNSKEY RRset deployed at each provider, and the signed DS
+        record in the parent zone refers to this KSK. In
+        <xref target="ss-model2">Sign and Serve model 2</xref>, each
+        provider has a distinct KSK and signs the DNSKEY RRset with it.
+        The Zone Owner deploys a DS RRset at the parent zone that
+        contains multiple DS records, each referring to a distinct
+        provider's KSK. Hence it does not matter which provider's
+        nameservers the resolver obtains the DNSKEY RRset from, the
+        signed DS record in each model can authenticate the associated
+        KSK.
       </t>
 
     </section>
