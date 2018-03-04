@@ -8,6 +8,7 @@
 <!ENTITY RFC4033 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4033.xml">
 <!ENTITY RFC4034 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4034.xml">
 <!ENTITY RFC4035 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4035.xml">
+<!ENTITY RFC6781 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6781.xml">
 <!ENTITY I-D.narten-iana-considerations-rfc2434bis SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.narten-iana-considerations-rfc2434bis.xml">
 ]>
 
@@ -98,7 +99,9 @@
         service. Two providers are fairly typical and this allows
         the DNS service to survive a complete failure of any
         single provider. This document outlines some possible
-        models of DNSSEC deployment in such an environment.
+        models of DNSSEC <xref target="RFC4033" />
+        <xref target="RFC4034" /> <xref target="RFC4035" />
+        deployment in such an environment.
       </t>
     </section>
 
@@ -142,7 +145,8 @@
         features are known in advance, it would be possible to
         pre-compute these answer sets and signatures, but the DNS
         zone transfer protocol cannot be used to distinguish or transfer
-        such data sets.)
+        such data sets, or the rules used to select among the possible
+        answers.)
         </t>
       </section>
 
@@ -357,6 +361,7 @@
     </references>
 
     <references title="Informative References">
+      &RFC6781;
       &RFC3552;
     </references>
   </back>
