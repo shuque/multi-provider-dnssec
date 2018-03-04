@@ -11,5 +11,5 @@ DNSSEC deployment in such an environment.
 
 Rendered versions of the current document can be found at the following links:
 
-* [HTML] (http://www.huque.com/ietf/multi-provider-dnssec/draft-huque-dnsop-multi-provider-dnssec.html)
-* [TEXT] (http://www.huque.com/ietf/multi-provider-dnssec/draft-huque-dnsop-multi-provider-dnssec.txt)
+* [HTML] (https://www.huque.com/ietf/multi-provider-dnssec/draft-huque-dnsop-multi-provider-dnssec.html)
+* [TEXT] (https://www.huque.com/ietf/multi-provider-dnssec/draft-huque-dnsop-multi-provider-dnssec.txt)
