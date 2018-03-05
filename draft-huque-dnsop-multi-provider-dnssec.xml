@@ -37,7 +37,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="info" docName="draft-huque-dnsop-multi-provider-dnssec-01" ipr="trust200902">
+<rfc category="info" docName="draft-huque-dnsop-multi-provider-dnssec-02" ipr="trust200902">
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
      you can add the attributes updates="NNNN" and obsoletes="NNNN" 
@@ -199,7 +199,8 @@
            public key, and insert a combined DNSKEY RRset that includes 
            both ZSKs and the KSK, signed by the KSK.</t>
         <t>Key rollovers need coordinated participation of the zone
-           owner to update and re-sign the DNSKEY RRset.</t>
+           owner to update the DNSKEY RRset (for KSK or ZSK), and the
+           DS RRset (for KSK).</t>
         </list>
         </t>
         </section>
@@ -213,8 +214,9 @@
         <t>DNSKEY RRset is signed independently by each provider using
            their own KSK.</t>
         <t>Zone owner manages the DS RRset that includes both KSKs.</t>
-        <t>KSK rollovers need coordinated participation of the zone
-           owner to update the DS RRset.</t>
+        <t>Key rollovers need coordinated participation of the zone
+           owner to update the DS RRset (for KSK), and the DNSKEY
+           RRset (for ZSK).</t>
         </list>
         </t>
         </section>
@@ -301,16 +303,14 @@
         of additional roundtrips depends on details of the resolver's
         nameserver selection algorithm and the number of nameservers
         configured at provider B.</t>
-        <t>Zone owners will want to deploy a DNS service that responds
-        as efficiently as possible with validatable answers, and hence
-        it is important that the DNSKEY RRset is maintained with the
-        ZSKs of all participating providers.</t>
         </list>
 
-        As long as the DNSKEY RRset at each provider contains the
-        active ZSKs of all the providers, resolvers can validate
-        a response no matter which provider's nameservers it came
-        from.
+        Zone owners will want to deploy a DNS service that responds
+        as efficiently as possible with validatable answers only, and
+        hence it is important that the DNSKEY RRset at each provider is
+        maintained with the active ZSKs of all participating providers.
+        This ensures that resolvers can validate a response no matter
+        which provider's nameservers it came from.
       </t>
 
       <t>
