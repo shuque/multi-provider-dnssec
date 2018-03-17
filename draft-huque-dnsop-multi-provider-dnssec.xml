@@ -178,11 +178,10 @@
         </t>
 
         <t>
-        In these models, the function of coordinating the DNSKEY
-        or DS RRset does not involve the providers communicating
-        directly with each other, which they are unlikely to do
-        since they typically have a contractual relationship only
-        with the zone owner.
+        In the first two of these models, the function of coordinating
+        the DNSKEY or DS RRset does not involve the providers communicating
+        directly with each other, which they are unlikely to do since they
+        typically have a contractual relationship only with the zone owner.
         </t>
 
         <t>
@@ -223,11 +222,20 @@
 
         <section title="Other Models" anchor="ss-other">
         <t>
-        Possible models in which KSK and/or ZSK key pairs are shared
-        across providers are not currently discussed. Preliminary
-        discussion with some providers has revealed that this is not a
-        mode all of them are comfortable with, as they do not want to
-        share signing keys with other parties.
+        Other possible models could involve the KSK and/or ZSK signing
+        keys shared across providers. Preliminary discussion with several
+        providers has revealed that this is not a model they are comfortable
+        with, again because they want to be independently responsible for
+        securing the signing keys without involvement of other parties
+        they don't have contractual relationships with. A possible way to
+        mitigate this concern might be for the zone owner to operate a
+        networked Hardware Security Module (HSM) which houses the shared
+        signing keys and performs the signing operations. The signing
+        instructions and results are communicated over a secure network
+        channel between the provider and HSM. This could work, but may
+        also pose performance bottlenecks, particularly for providers
+        that perform on-the-fly signing. Due to open questions about the
+        operational viability of this model, it is not discussed further.
         </t>
         </section>
 
