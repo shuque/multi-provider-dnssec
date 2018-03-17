@@ -189,7 +189,7 @@
         providers, but the model is generalizable to any number.
         </t>
 
-        <section title="Model 1" anchor="ss-model1">
+        <section title="Model 1: Common KSK, Unique ZSK per provider" anchor="ss-model1">
         <t>
         <list style="symbols">
         <t>Zone owner holds the KSK and manages the DS record.</t>
@@ -204,7 +204,7 @@
         </t>
         </section>
 
-        <section title="Model 2" anchor="ss-model2">
+        <section title="Model 2: Unique KSK and ZSK per provider" anchor="ss-model2">
         <t>
         <list style="symbols">
         <t>Each provider has their own KSK and ZSK.</t>
@@ -220,7 +220,7 @@
         </t>
         </section>
 
-        <section title="Other Models" anchor="ss-other">
+        <section title="Model 3: Shared KSK/ZSK Signing Keys" anchor="ss-model3">
         <t>
         Other possible models could involve the KSK and/or ZSK signing
         keys shared across providers. Preliminary discussion with several
