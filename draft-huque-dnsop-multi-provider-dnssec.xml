@@ -247,7 +247,18 @@
         has the limitation that non-standardized DNS features cannot be
         supported or signed. This model is not discussed further.
         </t>
+      </section>
 
+      <section title="Hybrid model" anchor="hybrid-model">
+        <t>
+        In the hybrid model, the zone owner uses one provider as
+        the primary, operating in Sign and Serve mode. The other providers
+        operate in Serve Only mode, i.e., they are configured as secondary
+        servers, obtaining the signed zone from the primary provider using
+        the DNS zone transfer protocol. This model suffers from the same
+        limitations as the Serve-Only model. It additionally requires the
+        signing keys to be held by the primary provider.
+        </t>
       </section>
 
     </section>
