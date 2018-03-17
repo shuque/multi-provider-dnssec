@@ -4,10 +4,12 @@
      There has to be one entity for each item to be referenced. 
      An alternate method (rfc include) is described in the references. -->
 
+<!ENTITY RFC1995 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.1995.xml">
 <!ENTITY RFC3552 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3552.xml">
 <!ENTITY RFC4033 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4033.xml">
 <!ENTITY RFC4034 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4034.xml">
 <!ENTITY RFC4035 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4035.xml">
+<!ENTITY RFC5936 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5936.xml">
 <!ENTITY RFC6781 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6781.xml">
 <!ENTITY I-D.narten-iana-considerations-rfc2434bis SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.narten-iana-considerations-rfc2434bis.xml">
 ]>
@@ -122,8 +124,8 @@
         The most straightforward deployment model is one in which the
         zone owner runs a primary master DNS server, and manages the
         signing of zone data. The master server uses DNS zone transfer
-        mechanisms (AXFR/IXFR) to distribute the signed zone to multiple
-        DNS providers.
+        mechanisms (AXFR/IXFR) <xref target="RFC5936"/> <xref target="RFC1995"/>
+        to distribute the signed zone to multiple DNS providers.
         </t>
         <t>
         This is also arguably the most secure model because the
@@ -374,9 +376,11 @@
 
   <back>
     <references title="Normative References">
+      &RFC1995;
       &RFC4033;
       &RFC4034;
       &RFC4035;
+      &RFC5936;
     </references>
 
     <references title="Informative References">
