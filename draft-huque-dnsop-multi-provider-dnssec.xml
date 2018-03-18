@@ -277,14 +277,27 @@
     <section title="Signing Algorithm Considerations" anchor="algorithms">
 
       <t>
-	[TBD: at the very least we have to note whether any or
-        all of these schemes require algorithms to be the same or not,
-        or benefit from algorithms being the same. Current DNS
-        specifications indicate that if there are multiple algorithms in
-        the DNSKEY RRset, then data records need to be signed with at
-        least one of each algorithm, (how does that work with online
-        signing?). Multiple signatures per record set is a cost that
-        probably few operators want to bear.]
+        Ideally, the providers should be using a common signing
+        algorithm (and common keysizes for algorithms that support
+        variable key sizes). This ensures that the multiple providers
+        have identical security postures and no provider is more
+        vulnerable to cryptanalytic attack than the others.
+      </t>
+      <t>
+        It may however be possible to deploy a configuration where
+        different providers use different signing algorithms. The
+        main impediment is that current DNSSEC specifications require
+        that if there are multiple algorithms in the DNSKEY RRset, then
+        RRsets in the zone need to be signed with at least one DNSKEY of
+        each algorithm, as described in <xref target="RFC4035">RFC 4035</xref>,
+        Section 2.2. However <xref target="RFC6781">RFC 6781</xref>,
+        Section 4.1.4, also describes both a conservative and liberal
+        interpretation of this requirement. When validating DNS resolvers
+        follow the liberal approach, they do not expect that zone RRsets
+        are signed by every signing algorithm in the DNSKEY RRset, and
+        responses with single algorithm signatures can be validated
+        corectly assuming a valid chain of trust exists. [TODO: investigate
+        resolver implementations to see what they actually do.]
       </t>
 
     </section>
