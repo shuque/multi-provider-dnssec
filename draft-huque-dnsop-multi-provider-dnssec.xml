@@ -104,6 +104,11 @@
 
     <section title="Introduction and Motivation">
       <t>
+        RFC EDITOR: PLEASE REMOVE THE FOLLOWING PARAGRAPH BEFORE
+        PUBLISHING: The source for this draft is maintained in GitHub
+        at: https://github.com/shuque/multi-provider-dnssec
+      </t>
+      <t>
         Many enterprises today employ the service of multiple
         DNS providers to distribute their authoritative DNS
         service. Two providers are fairly typical and this allows
