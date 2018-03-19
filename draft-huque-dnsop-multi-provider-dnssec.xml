@@ -337,6 +337,12 @@
         of additional roundtrips depends on details of the resolver's
         nameserver selection algorithm and the number of nameservers
         configured at provider B.</t>
+        <t>It may also be the case that a resolver is unable to
+        provide an authenticated response because it gave up after
+        a certain number of retries or a certain amount of delay. Or
+        that downstream clients of the resolver that originated the
+        query timed out waiting for a response.
+        </t>
         </list>
 
         Zone owners will want to deploy a DNS service that responds
