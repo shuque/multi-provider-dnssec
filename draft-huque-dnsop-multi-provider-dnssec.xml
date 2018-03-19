@@ -66,6 +66,14 @@
       </address>
     </author>
 
+    <author fullname="John Dickinson" initials="J." surname="Dickinson">
+      <organization>Sinodun</organization>
+      <address>
+        <email>jad@sinodun.com</email>
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+
     <date month="March" year="2018" />
 
     <!-- Meta-data Declarations -->
@@ -389,7 +397,17 @@
 	[TBD]
       </t>
     </section>
+
+    <section title="Acknowledgments">
+      <t>
+        This document benefited from discussions with and
+        review from the following people: Jan Vcelak, and
+        Duane Wessels.
+      </t>
+    </section>
+
   </middle>
+
 
   <!--  *****BACK MATTER ***** -->
 
