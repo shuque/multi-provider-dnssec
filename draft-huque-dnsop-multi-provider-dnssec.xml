@@ -124,7 +124,10 @@
       DNS providers as secondary servers, the "Serve Only" model, and
       (2) where the managed DNS providers each act like primary
       servers, signing data received from the zone owner and serving
-      it out to DNS queriers, the "Sign and Serve" model.
+      it out to DNS queriers, the "Sign and Serve" model. Inline
+      signing and hybrid models are also briefly mentioned. A large
+      part of this document discusses the Sign and Serve models which
+      present novel challenges.
       </t>
 
       <section title="Serve Only model" anchor="serve-only">
@@ -202,9 +205,11 @@
         <section title="Model 1: Common KSK, Unique ZSK per provider" anchor="ss-model1">
         <t>
         <list style="symbols">
-        <t>Zone owner holds the KSK and manages the DS record.</t>
+        <t>Zone owner holds the KSK, manages the DS record, and is
+           responsible for signing the DNSKEY RRset and distributing
+           the signed DNSKEY RRset to the providers.</t>
         <t>Each provider has their own ZSK which is used to sign data.</t>
-        <t>Providers have an API that owner uses to query the ZSK.
+        <t>Providers have an API that owner uses to query the ZSK
            public key, and insert a combined DNSKEY RRset that includes 
            both ZSKs and the KSK, signed by the KSK.</t>
         <t>Key rollovers need coordinated participation of the zone
@@ -218,11 +223,11 @@
         <t>
         <list style="symbols">
         <t>Each provider has their own KSK and ZSK.</t>
-        <t>Each provider also includes the ZSK of the other provider -
-           delivered to them by the zone owner via some API mechanism.</t>
+        <t>Each provider offers an API that the Zone Owner uses to import
+           the ZSK of the other provider into their DNSKEY RRset.</t>
         <t>DNSKEY RRset is signed independently by each provider using
            their own KSK.</t>
-        <t>Zone owner manages the DS RRset that includes both KSKs.</t>
+        <t>Zone Owner manages the DS RRset that includes both KSKs.</t>
         <t>Key rollovers need coordinated participation of the zone
            owner to update the DS RRset (for KSK), and the DNSKEY
            RRset (for ZSK).</t>
@@ -284,6 +289,14 @@
 
     <section title="Signing Algorithm Considerations" anchor="algorithms">
 
+      <t>
+        In the Serve Only and Hybrid models, one entity (the Zone Owner
+        in the former, and the primary provider in the latter) performs
+        the signing and hence chooses the signing algorithm to be deployed.
+        The more interesting case is the <xref target="sign-and-serve">
+        Sign and Serve model</xref>, where multiple providers independently
+        sign zone data.
+      </t>
       <t>
         Ideally, the providers should be using a common signing
         algorithm (and common keysizes for algorithms that support
