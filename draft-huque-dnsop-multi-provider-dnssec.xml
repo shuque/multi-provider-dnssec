@@ -74,6 +74,14 @@
       </address>
     </author>
 
+    <author fullname="Jan Vcelak" initials="J." surname="Vcelak">
+      <organization>NS1</organization>
+      <address>
+        <email>jv@fcelda.cz</email>
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+
     <date month="March" year="2018" />
 
     <!-- Meta-data Declarations -->
@@ -419,8 +427,7 @@
     <section title="Acknowledgments">
       <t>
         This document benefited from discussions with and
-        review from the following people: Jan Vcelak, and
-        Duane Wessels.
+        review from Duane Wessels.
       </t>
     </section>
 
