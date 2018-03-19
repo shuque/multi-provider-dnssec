@@ -139,7 +139,7 @@
       servers, signing data received from the zone owner and serving
       it out to DNS queriers, the "Sign and Serve" model. Inline
       signing and hybrid models are also briefly mentioned. A large
-      part of this document discusses the Sign and Serve models which
+      part of this document discusses the Sign and Serve models, which
       present novel challenges.
       </t>
 
