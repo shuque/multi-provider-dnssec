@@ -9,8 +9,10 @@
 <!ENTITY RFC4033 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4033.xml">
 <!ENTITY RFC4034 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4034.xml">
 <!ENTITY RFC4035 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4035.xml">
+<!ENTITY RFC5051 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5051.xml">
 <!ENTITY RFC5936 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5936.xml">
 <!ENTITY RFC6781 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6781.xml">
+<!ENTITY RFC8198 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8198.xml">
 <!ENTITY I-D.narten-iana-considerations-rfc2434bis SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.narten-iana-considerations-rfc2434bis.xml">
 ]>
 
@@ -336,6 +338,79 @@
 
     </section>
 
+    <section title="Authenticated Denial Considerations" anchor="nsec">
+      <t>
+        Authentiated denial of existence enables a resolver to validate that
+        a record does not exist. For this purpose, an authoritative server
+        presents in a response to the resolver special NSEC (Section 3.1.3 of
+        <xref target="RFC4035" />) or NSEC3 (Section 7.2 of <xref
+        target="RFC5051" />) records. The NSEC3 method enhances NSEC by
+        providing opt-out for signing insecure delegations and also adds
+        limited protection against zone enumeration attacks.
+      </t>
+
+      <t>
+        An authoritative server response carrying records for authenticated
+        denial is always self-contained and the receiving resolver doesn't
+        need to send additional queries to complete the denial proof data.
+        For this reason, no rollover is needed when switching between NSEC
+        and NSEC3 for a signed zone.
+      </t>
+
+      <t>
+        The self-containment of authenticated denial responses implies that
+        NSEC and NSEC3 can be used simultanously by different providers to
+        serve the same zone. Doing so however defeats protection for zone
+        enumeration contributed by NSEC3 and may have negative impact on how
+        effectively resolvers are able to cache the responses.
+      </t>
+
+      <section title="Single Method">
+        <t>
+          Usually, the NSEC and NSEC3 methods are used exclusively (i.e. the
+          methods are not used at the same time by different servers). This
+          configuration is prefered because the behavior is well-defined and
+          it's closest to the current operational practice.
+        </t>
+      </section>
+
+      <section title="Mixing Methods">
+        <t>
+          Compliant resolvers should be able to serve zones when different
+          authoritative servers for the same zone respond with different
+          authentiated denial methods because this is normally observed when
+          NSEC and NSEC3 are being switched or when NSEC3PARAM is updated.
+        </t>
+
+        <t>
+          Resolver software may be however designed to handle a single
+          transition between two authenticated denial configurations more
+          optimally than permanent setup with mixed authenticated denial
+          methods. This could make caching on the resolver side less
+          efficient and the authoritative servers may observe higher number
+          of queries. This aspect should be considered especially in context
+          of <xref target="RFC8198" >Aggresive Use of DNSSEC-Validated
+          Cache</xref>.
+        </t>
+        <t>
+          In case all providers cannot be configured for a matching
+          authentiated denial, it is advised to find lowest number of
+          possible configurations possible across all used providers.
+        </t>
+
+        <t>
+          Note that NSEC3 configuration on all providers with different NSEC3PARAM
+          values is considered a mixed setup.
+        </t>
+      </section>
+
+      <!--
+        Current implementations of Aggressive NSEC work with NSEC only.
+        Knot Resolver plans to store "last two configrations" to handle rollovers.
+      -->
+
+    </section>
+
     <section title="Validating Resolver Behavior" anchor="resolver">
 
       <t>
@@ -442,7 +517,9 @@
       &RFC4033;
       &RFC4034;
       &RFC4035;
+      &RFC5051;
       &RFC5936;
+      &RFC8198;
     </references>
 
     <references title="Informative References">
