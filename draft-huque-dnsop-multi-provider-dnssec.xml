@@ -481,7 +481,6 @@
     </section>
 
     <section title="Key Rollover Considerations" anchor="keyrollover">
-
       <t>
 	     Key rollover for Key Signing Key(KSK) and Zone signing(ZSK) in
        multi-provider mode would require information exchange between providers(or on 
@@ -504,9 +503,9 @@
         </t>
         </list>
         </t>
-        </section>
+      </section>
 
-        <section title="Model 2: Unique KSK and ZSK per provider" anchor="krc-model2">
+      <section title="Model 2: Unique KSK and ZSK per provider" anchor="krc-model2">
         <t>
         <list style="symbols">
         <t>KSK Roll: In this model each provider will have their own KSK. A KSK 
@@ -521,11 +520,11 @@
         </t>
         </list>
         </t>
-        </section>
-         <t>
-      Another consideration would be Pre and Post publish timing for ZSK rollover. T
-      hese timings would be dependent on TTL of the DNSKEY RRset and the zone records. 
-      </t>
+      </section>
+        <t>
+          Another consideration would be Pre and Post publish timing for ZSK rollover. 
+          These timings would be dependent on TTL of the DNSKEY RRset and the zone records. 
+        </t>
     </section>
 
 
