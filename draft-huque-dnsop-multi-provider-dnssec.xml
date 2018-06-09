@@ -483,14 +483,24 @@
     <section title="Key Rollover Considerations" anchor="keyrollover">
 
       <t>
-	     Key rollover for Key Signing Key(KSK) and Zone signing(ZSK) in multi-provider mode would require information exchange between providers(or on behlaf of providers). The information needed to be exchanged for Key Signing Key and Zone signing key would differ based on the sign and serve model.
+	     Key rollover for Key Signing Key(KSK) and Zone signing(ZSK) in
+       multi-provider mode would require information exchange between providers(or on 
+       behlaf of providers). The information needed to be exchanged for Key Signing Key 
+       and Zone signing key would differ based on the sign and serve model.
       </t>
       <section title="Model 1: Common KSK, Unique ZSK per provider" anchor="krc-model1">
         <t>
         <list style="symbols">
-        <t>KSK Roll: In this model the two providers share a common KSK and the rollover of KSK would be handled by the zone owner. The DNSKEY RRset would be resigned with the new KSK and handed to the two providers to be published. The zone owner will update the DS RRset in the parent zone.
+        <t>KSK Roll: In this model the two providers share a common KSK 
+          and the rollover of KSK would be handled by the zone owner. 
+          The DNSKEY RRset would be resigned with the new KSK and handed 
+          to the two providers to be published. The zone owner will update the DS 
+          RRset in the parent zone.
         </t>
-        <t>ZSK Roll: The ZSK roll for provider A would start with provider A getting their new DNSKEY RRset signed by the zone owner(who holds the KSK) and publishing it. The new ZSK would be added to the DNSKEY RRset of provider B and signed.  
+        <t>ZSK Roll: The ZSK roll for provider A would start with provider 
+          A getting their new DNSKEY RRset signed by the zone owner(who holds the KSK) 
+          and publishing it. The new ZSK would be added to the DNSKEY RRset of 
+          provider B and signed.  
         </t>
         </list>
         </t>
@@ -499,15 +509,22 @@
         <section title="Model 2: Unique KSK and ZSK per provider" anchor="krc-model2">
         <t>
         <list style="symbols">
-        <t>KSK Roll: In this model each provider will have their own KSK. A KSK roll for provider A does not require any change in DNSKEY RRset of provider B. The KSK roll would start with Provider A signing their DNSKEY RRset with the new KSK and sending the new KSK to the zone owner so the DS RRset can be updated in the parent zone.
+        <t>KSK Roll: In this model each provider will have their own KSK. A KSK 
+          roll for provider A does not require any change in DNSKEY RRset of provider 
+          B. The KSK roll would start with Provider A signing their DNSKEY RRset 
+          with the new KSK and sending the new KSK to the zone owner so the DS RRset 
+          can be updated in the parent zone.
         </t>
-        <t>ZSK Roll: In this model, ZSK roll for provider A would start with them signing their new DNSKEY RRset. The new ZSK would handed to provider B to be included in their DNSKEY RRset and signed.
+        <t>ZSK Roll: In this model, ZSK roll for provider A would start with them signing 
+          their new DNSKEY RRset. The new ZSK would handed to provider B to be included 
+          in their DNSKEY RRset and signed.
         </t>
         </list>
         </t>
         </section>
          <t>
-      Another consideration would be Pre and Post publish timing for ZSK rollover. These timings would be dependent on TTL of the DNSKEY RRset and the zone records. 
+      Another consideration would be Pre and Post publish timing for ZSK rollover. T
+      hese timings would be dependent on TTL of the DNSKEY RRset and the zone records. 
       </t>
     </section>
 
