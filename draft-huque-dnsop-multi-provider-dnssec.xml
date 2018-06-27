@@ -482,24 +482,37 @@
 
     <section title="Key Rollover Considerations" anchor="keyrollover">
       <t>
-	     Key rollover for Key Signing Key(KSK) and Zone signing(ZSK) in
-       multi-provider mode would require information exchange between providers(or on 
-       behlaf of providers). The information needed to be exchanged for Key Signing Key 
-       and Zone signing key would differ based on the sign and serve model.
+	     Key rollover for Key Signing Key(KSK) and Zone Signing Key(ZSK) 
+       in multi-provider mode would require information exchange on 
+       behalf of managed DNS providers, by the zone owner. The information 
+       needed to be exchanged for Key Signing Key and Zone Signing Key would 
+       differ based on the sign and serve model.
       </t>
       <section title="Model 1: Common KSK, Unique ZSK per provider" anchor="krc-model1">
         <t>
         <list style="symbols">
-        <t>KSK Roll: In this model the two providers share a common KSK 
-          and the rollover of KSK would be handled by the zone owner. 
-          The DNSKEY RRset would be resigned with the new KSK and handed 
-          to the two providers to be published. The zone owner will update the DS 
-          RRset in the parent zone.
+        <t>Key Signing Key Rollover: In Model 1, the two managed DNS providers 
+          share a common KSK which is held by the zone owner. To initiate 
+          the rollover, the zone owner would generate a new KSK and obtain 
+          the DNSKEY RRset of each DNS provider using API. The new KSK will 
+          be added to each of the DNSKEY RRset and the RRSet will be signed by 
+          the new and the old KSK. The details of "Double-Signature scheme" for KSK 
+          rollover is described in <xref target="RFC6781"/>.
+          The zone owner would use the API for each managed DNS provider to 
+          handover the DNSKey RRSet. The zone owner will update the DS RRset 
+          in the parent zone.
         </t>
-        <t>ZSK Roll: The ZSK roll for provider A would start with provider 
-          A getting their new DNSKEY RRset signed by the zone owner(who holds the KSK) 
-          and publishing it. The new ZSK would be added to the DNSKEY RRset of 
-          provider B and signed.  
+
+        <t>Zone Signing Key Rollover: In Model 1, each managed DNS provider has 
+          seperate Zone Signing Key. The ZSK rollover for managed DNS provider A, 
+          would start with provider A generating a new ZSK and including it 
+          in their DNSKEY RRSet. The zone owner may query the provider 
+          API to obtain the new DNSKEY RRset, sign it using the KSK (they hold) and insert 
+          the signed DNSKEY RRset back to provder A using API. The details of "Pre-Publish 
+          key rollover" for ZSK rollover is described in <xref target="RFC6781"/>.
+          The zone owner would also obtain DNSKEY RRset 
+          of provider B via  provider B's API, add provider A's ZSK into provider B's 
+          DNSKEY RRset, sign it and insert it back to provider B via API. 
         </t>
         </list>
         </t>
@@ -508,23 +521,26 @@
       <section title="Model 2: Unique KSK and ZSK per provider" anchor="krc-model2">
         <t>
         <list style="symbols">
-        <t>KSK Roll: In this model each provider will have their own KSK. A KSK 
-          roll for provider A does not require any change in DNSKEY RRset of provider 
-          B. The KSK roll would start with Provider A signing their DNSKEY RRset 
-          with the new KSK and sending the new KSK to the zone owner so the DS RRset 
-          can be updated in the parent zone.
+        <t>Key Signing Key Rollover: In Model 2, each managed DNS provider will have their 
+          own KSK. A KSK roll for provider A does not require any change in DNSKEY RRset of 
+          provider B. The KSK roll would start with Provider A generating a new KSK 
+          and including it in their DNSKEY RRSet. The DNSKey RRset would then be signed by 
+          the new and old KSK. The details of "Double-Signature scheme" for KSK rollover 
+          is described in <xref target="RFC6781"/>. The zone owner may query for the new KSK 
+          using provider A's API and update the DS RRset in the parent zone.
         </t>
-        <t>ZSK Roll: In this model, ZSK roll for provider A would start with them signing 
-          their new DNSKEY RRset. The new ZSK would handed to provider B to be included 
-          in their DNSKEY RRset and signed.
+
+        <t>Zone Signing Key Rollover: In Model 2, each managed DNS provider will have their own ZSK. 
+          The ZSK roll for provider A would start with them generating new ZSK and including 
+          it in their DNSKEY RRset and signing the new DNSKEY RRset with their KSK. The details of
+          "Pre-Publish key rollover" for ZSK rollover is described in <xref target="RFC6781"/>. 
+          The new ZSK of provider A would be handed to provider B, by the zone owner using provider B's API. 
+          Provider B would have to include provider A's new ZSK in their DNSKEY RRset and sign it 
+          using their own KSK.
         </t>
         </list>
         </t>
       </section>
-        <t>
-          Another consideration would be Pre and Post publish timing for ZSK rollover. 
-          These timings would be dependent on TTL of the DNSKEY RRset and the zone records. 
-        </t>
     </section>
 
 
