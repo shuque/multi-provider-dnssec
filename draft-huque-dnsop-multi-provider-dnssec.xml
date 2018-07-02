@@ -190,7 +190,9 @@
         the DNSKEY and DS RRset in such a way that validating resolvers
         always have a viable path to authenticate the DNSSEC signature
         chain no matter which provider they query and obtain responses
-        from.
+        from. This requirement is achieved by having each provider
+        import the Zone Signing Keys of all other providers into their
+        DNSKEY RRsets.
         </t>
 
         <t>
