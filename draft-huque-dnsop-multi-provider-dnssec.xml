@@ -41,7 +41,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="info" docName="draft-huque-dnsop-multi-provider-dnssec-02" ipr="trust200902">
+<rfc category="info" docName="draft-huque-dnsop-multi-provider-dnssec-03" ipr="trust200902">
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
      you can add the attributes updates="NNNN" and obsoletes="NNNN" 
@@ -142,7 +142,7 @@
       it out to DNS queriers, the "Sign and Serve" model. Inline
       signing and hybrid models are also briefly mentioned. A large
       part of this document discusses the Sign and Serve models, which
-      present novel challenges.
+      present novel challenges and requirements.
       </t>
 
       <section title="Serve Only model" anchor="serve-only">
@@ -334,8 +334,10 @@
         follow the liberal approach, they do not expect that zone RRsets
         are signed by every signing algorithm in the DNSKEY RRset, and
         responses with single algorithm signatures can be validated
-        corectly assuming a valid chain of trust exists. [TODO: investigate
-        resolver implementations to see what they actually do.]
+        corectly assuming a valid chain of trust exists. In fact,
+        <xref target="BR-ROLLOVER">testing by the .BR Top Level domain
+        for their planned algorithm rollover</xref>, demonstrates that
+        the liberal approach works.
       </t>
 
     </section>
@@ -619,6 +621,15 @@
 
     <references title="Informative References">
       &RFC7129;
+      <reference anchor="BR-ROLLOVER"
+        target="https://static.ptbl.co/static/attachments/179548/1529933472.pdf">
+        <front>
+          <title>.br DNSSEC Algorithm Rollover Update</title>
+          <author initials="F." surname="Neves"><organization /></author>
+          <date year="2018" month="June" />
+        </front>
+        <seriesInfo name="in" value="ICANN 62 DNSSEC Workshop" />
+      </reference>
       <reference anchor="BLACKLIES"
                  target="https://tools.ietf.org/html/draft-valsorda-dnsop-black-lies">
         <front>
