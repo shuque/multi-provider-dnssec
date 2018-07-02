@@ -11,6 +11,7 @@
 <!ENTITY RFC5155 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5155.xml">
 <!ENTITY RFC5936 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5936.xml">
 <!ENTITY RFC6781 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6781.xml">
+<!ENTITY RFC7129 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7129.xml">
 <!ENTITY RFC8198 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8198.xml">
 <!ENTITY I-D.narten-iana-considerations-rfc2434bis SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.narten-iana-considerations-rfc2434bis.xml">
 ]>
@@ -357,11 +358,17 @@
       </t>
 
       <t>
-        The self-containment of authenticated denial responses implies that
-        NSEC and NSEC3 can be used simultanously by different providers to
-        serve the same zone. Doing so however defeats protection for zone
-        enumeration contributed by NSEC3 and may have negative impact on how
-        effectively resolvers are able to cache the responses.
+        Since authenticated denial responses are self-contained, NSEC and
+        NSEC3 can be used by different providers to serve the same zone.
+        Doing so however defeats the protection against zone enumeration
+        provided by NSEC3. A better configuration involves multiple
+        providers using different authenticated denial of existence mechanisms
+        that all provide zone enumeration defense, such as pre-computed
+        NSEC3, <xref target="RFC7129">NSEC3 White Lies</xref>,
+        <xref target="BLACKLIES">NSEC Black Lies</xref>, etc. Note however that
+        having multiple providers offering different authenticated denial
+        mechanisms may impact how effectively resolvers are able to make
+        use of the caching of negative responses.
       </t>
 
       <section title="Single Method">
@@ -604,11 +611,21 @@
       &RFC4035;
       &RFC5155;
       &RFC5936;
+      &RFC6781;
       &RFC8198;
     </references>
 
     <references title="Informative References">
-      &RFC6781;
+      &RFC7129;
+      <reference anchor="BLACKLIES"
+                 target="https://tools.ietf.org/html/draft-valsorda-dnsop-black-lies">
+        <front>
+          <title>Compact DNSSEC Denial of Existence or Black Lies</title>
+          <author fullname="Filippo Valsorda" initials="F" surname="Valsorda" />
+          <author fullname="Olafur Gudmundsson" initials="O" surname="Gudmundsson" />
+          <date />
+        </front>
+      </reference>
     </references>
   </back>
 
