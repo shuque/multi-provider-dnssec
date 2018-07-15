@@ -84,6 +84,14 @@
       </address>
     </author>
 
+    <author fullname="David Blacka" initials="D." surname="Blacka">
+      <organization>Verisign</organization>
+      <address>
+        <email>davidb@verisign.com</email>
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+
     <date month="July" year="2018" />
 
     <!-- Meta-data Declarations -->
@@ -598,7 +606,7 @@
     <section title="Acknowledgments">
       <t>
         This document benefited from discussions with and
-        review from Duane Wessels and David Blacka.
+        review from Duane Wessels.
       </t>
     </section>
 
