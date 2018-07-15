@@ -563,7 +563,7 @@
           The DNSKey RRset would then be signed by both the new and old KSK.
           The new KSK is communicated to the Zone Owner, after which the Zone
           Owner updates the DS RRset to replace the DS record for the old KSK
-          with a DS record for the new ZSK. After the necessary DS RRset TTL
+          with a DS record for the new KSK. After the necessary DS RRset TTL
           period has elapsed, the old KSK can be removed from provider A's
           DNSKEY RRset.
         </t>
