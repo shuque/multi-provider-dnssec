@@ -106,12 +106,12 @@
 
     <abstract>
       <t>
-        Many enterprises today employ the service of multiple
-        DNS providers to distribute their authoritative DNS
-        service. Deploying DNSSEC in such an environment can
-        have some challenges depending on the configuration and
-        feature set in use. This document will present several
-        deployment models that may be suitable.
+        Many enterprises today employ the service of multiple DNS
+        providers to distribute their authoritative DNS
+        service. Deploying DNSSEC in such an environment may present
+        some challenges depending on the configuration and feature set
+        in use. This document will present several deployment models
+        that may be suitable.
       </t>
     </abstract>
   </front>
@@ -127,94 +127,75 @@
         at: https://github.com/shuque/multi-provider-dnssec
       </t>
       <t>
-        Many enterprises today employ the service of multiple
-        DNS providers to distribute their authoritative DNS
-        service. Two providers are fairly typical and this allows
-        the DNS service to survive a complete failure of any
-        single provider. This document outlines some possible
-        models of DNSSEC <xref target="RFC4033" />
-        <xref target="RFC4034" /> <xref target="RFC4035" />
-        deployment in such an environment.
+        Many enterprises today employ the service of multiple DNS
+        providers to distribute their authoritative DNS service. This
+        allows the DNS service to survive a complete failure of any
+        single provider. Additionally, enterprises or providers
+        occasionally have requirements that preclude standard zone
+        transfer techniques: either non-standardized DNS features are
+        in use, or operationally a provider must be able to (re)sign
+        DNS records using their own keys. This document outlines some
+        possible models of DNSSEC <xref target="RFC4033" /> <xref
+        target="RFC4034" /> <xref target="RFC4035" /> deployment in
+        such an environment.
       </t>
-    </section>
 
+    </section>
 
     <section title="Deployment Models" anchor="models">
 
       <t>
-      The two main models discussed are (1) where the zone owner
-      runs a master signing server and essentially treats the managed
-      DNS providers as secondary servers, the "Serve Only" model, and
-      (2) where the managed DNS providers each act like primary
-      servers, signing data received from the zone owner and serving
-      it out to DNS queriers, the "Sign and Serve" model. Inline
-      signing and hybrid models are also briefly mentioned. A large
-      part of this document discusses the Sign and Serve models, which
-      present novel challenges and requirements.
+        If a zone owner is able to use standard zone transfer
+        techniques, then the presence of multiple providers does not
+        present any need to substantially modify normal deployment
+        models.  In these deployments there is a single signing entity
+        (which may be the zone owner, one of the providers, or a
+        separate entity), while the providers generally act a secondary
+        authoritative servers for the zone.
       </t>
 
-      <section title="Serve Only model" anchor="serve-only">
-        <t>
-        The most straightforward deployment model is one in which the
-        zone owner runs a primary master DNS server, and manages the
-        signing of zone data. The master server uses DNS zone transfer
-        mechanisms (AXFR/IXFR) <xref target="RFC5936"/> <xref target="RFC1995"/>
-        to distribute the signed zone to multiple DNS providers.
-        </t>
-        <t>
-        This is also arguably the most secure model because the
-        zone owner holds the private signing keys. The managed DNS
-        providers cannot serve bogus data (either maliciously or
-        because of compromise of their systems) without detection by
-        validating resolvers.
-        </t>
-        <t>
-        One notable limitation of this model is that it may not work
-        with DNS authoritative server configurations that use certain
-        non-standardized DNS features. Some of these features like
-        DNS based Global Server Load Balancing (GSLB), dynamic
-        failover pools, etc. rely on querier specific responses,
-        or responses based on real-time state examination, and so,
-        the answer and corresponding signature has to be determined
-        at the authoritative server being queried, at the time
-        of the query, or both. (If all possible answer sets for these
-        features are known in advance, it would be possible to
-        pre-compute these answer sets and signatures, but the DNS
-        zone transfer protocol cannot be used to distinguish or transfer
-        such data sets, or the rules used to select among the possible
-        answers.)
-        </t>
-      </section>
+      <t>
+        Occasionally, however, standard zone transfer techniques
+        cannot be used.  This could be due to the use of non-standard
+        DNS features, or due to operational requirements of a given
+        provider (e.g., a provider that only supports "online
+        signing".) In these scenarios, the multiple providers act like
+        primary servers, signing data received from the zone owner and
+        serving it to DNS queriers.  Multiple providers acting as
+        primaries and signing the zone separately presents novel
+        challenges and requirements.
+      </t>
 
-
-      <section title="Sign and Serve model" anchor="sign-and-serve">
+      <section title="Multiple Signer models" anchor="multi-sign">
 
         <t>
-        In this category of models, multiple providers each independently
-        sign and serve the same zone. The zone owner typically uses
-        provider-specific APIs to update zone content at each of the
-        providers, and relies on the provider to perform signing of
-        the data. A key requirement here is to manage the contents of
-        the DNSKEY and DS RRset in such a way that validating resolvers
-        always have a viable path to authenticate the DNSSEC signature
-        chain no matter which provider they query and obtain responses
-        from. This requirement is achieved by having each provider
-        import the Zone Signing Keys of all other providers into their
-        DNSKEY RRsets.
+        In this category of models, multiple providers each
+        independently sign and serve the same zone. The zone owner
+        typically uses provider-specific APIs to update zone content
+        at each of the providers, and relies on the provider to
+        perform signing of the data. A key requirement here is to
+        manage the contents of the DNSKEY and DS RRset in such a way
+        that validating resolvers always have a viable path to
+        authenticate the DNSSEC signature chain no matter which
+        provider is queried. This requirement is achieved by having
+        each provider import the public Zone Signing Keys (ZSKs) of
+        all other providers into their DNSKEY RRsets.
         </t>
 
         <t>
-        These models can support DNSSEC even for the non-standard 
+        These models can support DNSSEC even for the non-standard
         features mentioned previously, if the DNS providers have the
         capability of signing the response data generated by those
-        features. Since these responses are often generated dynamically
-        at query time, one method is for the provider to perform
-        online signing (also known as on-the-fly signing). However,
-        another possible approach is to pre-compute all the possible
-        response sets and associated signatures and then algorithmically
-        determine at query time which response set needs to be returned.
+        features. Since these responses are often generated
+        dynamically at query time, one method is for the provider to
+        perform online signing (also known as online or on-the-fly
+        signing). However, another possible approach is to pre-compute
+        all the possible response sets and associated signatures and
+        then algorithmically determine at query time which response
+        set needs to be returned.
         </t>
 
+        <!-- davib: unsure if this paragraph is needed -->
         <t>
         In the first two of these models, the function of coordinating
         the DNSKEY or DS RRset does not involve the providers communicating
@@ -227,7 +208,7 @@
         providers, but the model is generalizable to any number.
         </t>
 
-        <section title="Model 1: Common KSK, Unique ZSK per provider" anchor="ss-model1">
+        <section title="Model 1: Common KSK, Unique ZSK per provider" anchor="model1">
         <t>
         <list style="symbols">
         <t>Zone owner holds the KSK, manages the DS record, and is
@@ -244,7 +225,7 @@
         </t>
         </section>
 
-        <section title="Model 2: Unique KSK and ZSK per provider" anchor="ss-model2">
+        <section title="Model 2: Unique KSK and ZSK per provider" anchor="model2">
         <t>
         <list style="symbols">
         <t>Each provider has their own KSK and ZSK.</t>
@@ -259,71 +240,80 @@
         </list>
         </t>
         </section>
-
-        <section title="Model 3: Shared KSK/ZSK Signing Keys" anchor="ss-model3">
-        <t>
-        Other possible models could involve the KSK and/or ZSK signing
-        keys shared across providers. Preliminary discussion with several
-        providers has revealed that this is not a model they are comfortable
-        with, again because they want to be independently responsible for
-        securing the signing keys without involvement of other parties
-        they don't have contractual relationships with. A possible way to
-        mitigate this concern might be for the zone owner to operate a
-        networked Hardware Security Module (HSM) which houses the shared
-        signing keys and performs the signing operations. The signing
-        instructions and results are communicated over a secure network
-        channel between the provider and HSM. This could work, but may
-        also pose performance bottlenecks, particularly for providers
-        that perform on-the-fly signing. Due to open questions about the
-        operational viability of this model, it is not discussed further.
-        </t>
-        </section>
-
-
       </section>
-
-      <section title="Inline Signing model" anchor="inline-signing">
-        <t>
-        In this model, the zone owner runs a master server but does
-        not perform zone signing, instead pushing out the zone (typically
-        via zone transfer mechanisms) to multiple providers, and relying
-        on those providers to sign the zone data before serving them out. 
-        This model has to address the same set of requirements as the
-        Sign-and-Serve model regarding managing the DNSKEY and DS RRsets.
-        However, assuming standardized zone transfers mechanisms are
-        being used to push out the zone to the providers, it likely also
-        has the limitation that non-standardized DNS features cannot be
-        supported or signed. This model is not discussed further.
-        </t>
-      </section>
-
-      <section title="Hybrid model" anchor="hybrid-model">
-        <t>
-        In the hybrid model, the zone owner uses one provider as
-        the primary, operating in Sign and Serve mode. The other providers
-        operate in Serve Only mode, i.e., they are configured as secondary
-        servers, obtaining the signed zone from the primary provider using
-        the DNS zone transfer protocol. This model suffers from the same
-        limitations as the Serve-Only model. It additionally requires the
-        signing keys to be held by the primary provider.
-        </t>
-      </section>
-
     </section>
 
+    <section title="Validating Resolver Behavior" anchor="resolver">
+
+      <t>
+        The central requirement for both of the <xref
+        target="multi-sign">Multiple Signer models</xref> is to ensure
+        that the ZSKs from all providers are present in each
+        provider's apex DNSEY RRset, and is vouched for by either the
+        single KSK (in model 1) or each provider's KSK (in model 2.)
+        
+        If this is not done, the following situation can arise (assuming
+        two providers A and B):
+
+        <list style="symbols">
+        <t>The validating resolver follows a referral (delegation) to the
+        zone in question.</t>
+        <t>It retrieves the zone's DNSKEY RRset from one of provider
+        A's nameservers.</t>
+        <t>At some point in time, the resolver attempts to resolve a
+        name in the zone, while the DNSKEY RRset received from provider A
+        is still viable in its cache.</t>
+        <t>It queries one of provider B's nameservers to resolve the
+        name, and obtains a response that is signed by provider B's
+        ZSK, which it cannot authenticate because this ZSK is not present
+        in its cached DNSKEY RRset for the zone that it received from
+        provider A.</t>
+        <t>The resolver will not accept this response. It may still
+        be able to ultimately authenticate the name by querying other
+        nameservers for the zone until it elicits a response from one
+        of provider A's nameservers. But it has incurred the penalty
+        of additional roundtrips with other nameservers, with the
+        corresponding latency and processing costs. The exact number
+        of additional roundtrips depends on details of the resolver's
+        nameserver selection algorithm and the number of nameservers
+        configured at provider B.</t>
+        <t>It may also be the case that a resolver is unable to
+        provide an authenticated response because it gave up after
+        a certain number of retries or a certain amount of delay. Or
+        that downstream clients of the resolver that originated the
+        query timed out waiting for a response.
+        </t>
+        </list>
+
+        Zone owners will want to deploy a DNS service that responds
+        as efficiently as possible with validatable answers only, and
+        hence it is important that the DNSKEY RRset at each provider is
+        maintained with the active ZSKs of all participating providers.
+        This ensures that resolvers can validate a response no matter
+        which provider's nameservers it came from.
+      </t>
+
+      <t>
+        Details of how the DNSKEY RRset itself is validated differs.
+        In <xref target="model1">model 1</xref>, one unique KSK
+        managed by the Zone Owner signs an identical DNSKEY RRset
+        deployed at each provider, and the signed DS record in the
+        parent zone refers to this KSK. In <xref
+        target="model2">model 2</xref>, each provider has a
+        distinct KSK and signs the DNSKEY RRset with it.  The Zone
+        Owner deploys a DS RRset at the parent zone that contains
+        multiple DS records, each referring to a distinct provider's
+        KSK. Hence it does not matter which provider's nameservers the
+        resolver obtains the DNSKEY RRset from, the signed DS record
+        in each model can authenticate the associated KSK.
+      </t>
+
+    </section>
 
     <section title="Signing Algorithm Considerations" anchor="algorithms">
 
       <t>
-        In the Serve Only and Hybrid models, one entity (the Zone Owner
-        in the former, and the primary provider in the latter) performs
-        the signing and hence chooses the signing algorithm to be deployed.
-        The more interesting case is the <xref target="sign-and-serve">
-        Sign and Serve model</xref>, where multiple providers independently
-        sign zone data.
-      </t>
-      <t>
-        Ideally, the providers should be using a common signing
+        It is RECOMMENDED that the providers use a common signing
         algorithm (and common keysizes for algorithms that support
         variable key sizes). This ensures that the multiple providers
         have identical security postures and no provider is more
@@ -417,8 +407,8 @@
         </t>
 
         <t>
-          Note that NSEC3 configuration on all providers with different NSEC3PARAM
-          values is considered a mixed setup.
+          Note that NSEC3 configuration on all providers with
+          different NSEC3PARAM values is considered a mixed setup.
         </t>
       </section>
 
@@ -429,85 +419,16 @@
 
     </section>
 
-    <section title="Validating Resolver Behavior" anchor="resolver">
-
-      <t>
-
-	From the point of view of the Validating Resolver, the
-        <xref target="sign-and-serve">Sign and Serve models</xref>,
-        that employ multiple providers signing the same zone data with
-        distinct keys, are the most interesting. In these models, for
-        each provider, the Zone Signing Keys of the other providers are
-        imported into the DNSKEY RRset and the DNSKEY RRset is re-signed.
-        If this is not done, the following situation can arise (assuming
-        two providers A and B):
-
-        <list style="symbols">
-        <t>The validating resolver follows a referral (delegation) to the
-        zone in question.</t>
-        <t>It retrieves the zone's DNSKEY RRset from one of provider
-        A's nameservers.</t>
-        <t>At some point in time, the resolver attempts to resolve a
-        name in the zone, while the DNSKEY RRset received from provider A
-        is still viable in its cache.</t>
-        <t>It queries one of provider B's nameservers to resolve the
-        name, and obtains a response that is signed by provider B's
-        ZSK, which it cannot authenticate because this ZSK is not present
-        in its cached DNSKEY RRset for the zone that it received from
-        provider A.</t>
-        <t>The resolver will not accept this response. It may still
-        be able to ultimately authenticate the name by querying other
-        nameservers for the zone until it elicits a response from one
-        of provider A's nameservers. But it has incurred the penalty
-        of additional roundtrips with other nameservers, with the
-        corresponding latency and processing costs. The exact number
-        of additional roundtrips depends on details of the resolver's
-        nameserver selection algorithm and the number of nameservers
-        configured at provider B.</t>
-        <t>It may also be the case that a resolver is unable to
-        provide an authenticated response because it gave up after
-        a certain number of retries or a certain amount of delay. Or
-        that downstream clients of the resolver that originated the
-        query timed out waiting for a response.
-        </t>
-        </list>
-
-        Zone owners will want to deploy a DNS service that responds
-        as efficiently as possible with validatable answers only, and
-        hence it is important that the DNSKEY RRset at each provider is
-        maintained with the active ZSKs of all participating providers.
-        This ensures that resolvers can validate a response no matter
-        which provider's nameservers it came from.
-      </t>
-
-      <t>
-        Details of how the DNSKEY RRset itself is validated differs.
-        In <xref target="ss-model1">Sign and Serve model 1</xref>,
-        one unique KSK managed by the Zone Owner signs an identical
-        DNSKEY RRset deployed at each provider, and the signed DS
-        record in the parent zone refers to this KSK. In
-        <xref target="ss-model2">Sign and Serve model 2</xref>, each
-        provider has a distinct KSK and signs the DNSKEY RRset with it.
-        The Zone Owner deploys a DS RRset at the parent zone that
-        contains multiple DS records, each referring to a distinct
-        provider's KSK. Hence it does not matter which provider's
-        nameservers the resolver obtains the DNSKEY RRset from, the
-        signed DS record in each model can authenticate the associated
-        KSK.
-      </t>
-
-    </section>
-
     <section title="Key Rollover Considerations" anchor="keyrollover">
       <t>
-        The <xref target="sign-and-serve">Sign-and-Serve</xref> models
+        The <xref target="multi-sign">Multiple Signer</xref> models
         introduce some new requirements for DNSSEC key rollovers.
-        Since this process necessarily involves co-ordinated actions on
-        the part of providers and the Zone Owner, one reasonable strategy
-        is for the Zone Owner to initiate key rollover operations. But
-        other operationally plausible models may also suit, such as a
-        DNS provider initiating a key rollover and signaling their intent
-        to the Zone Owner in some manner.
+        Since this process necessarily involves coordinated actions on
+        the part of providers and the Zone Owner, one reasonable
+        strategy is for the Zone Owner to initiate key rollover
+        operations. But other operationally plausible models may also
+        suit, such as a DNS provider initiating a key rollover and
+        signaling their intent to the Zone Owner in some manner.
       </t>
       <t>
         The descriptions in this section assume that KSK rollovers
