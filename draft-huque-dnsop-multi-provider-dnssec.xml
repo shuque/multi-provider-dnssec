@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="US-ASCII"?>
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
 <!-- One method to get references from the online citation libraries.
-     There has to be one entity for each item to be referenced. 
+     There has to be one entity for each item to be referenced.
      An alternate method (rfc include) is described in the references. -->
 
 <!ENTITY RFC1995 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.1995.xml">
@@ -18,7 +18,7 @@
 
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <!-- used by XSLT processors -->
-<!-- For a complete list and description of processing instructions (PIs), 
+<!-- For a complete list and description of processing instructions (PIs),
      please see http://xml.resource.org/authoring/README.html. -->
 <!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
      (Here they are set differently than their defaults in xml2rfc v1.32) -->
@@ -34,7 +34,7 @@
 <!-- use symbolic references tags, i.e, [RFC2119] instead of [1] -->
 <?rfc sortrefs="yes" ?>
 <!-- sort the reference entries alphabetically -->
-<!-- control vertical white space 
+<!-- control vertical white space
      (using these PIs as follows is recommended by the RFC Editor) -->
 <?rfc compact="yes" ?>
 <!-- do not start each main section on a new page -->
@@ -44,7 +44,7 @@
 <rfc category="info" docName="draft-huque-dnsop-multi-provider-dnssec-03" ipr="trust200902">
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
-     you can add the attributes updates="NNNN" and obsoletes="NNNN" 
+     you can add the attributes updates="NNNN" and obsoletes="NNNN"
      they will automatically be output with "(if approved)" -->
 
   <!-- ***** FRONT MATTER ***** -->
@@ -133,9 +133,9 @@
         single provider. Additionally, enterprises or providers
         occasionally have requirements that preclude standard zone
         transfer techniques: either non-standardized DNS features are
-        in use, or operationally a provider must be able to (re)sign
-        DNS records using their own keys. This document outlines some
-        possible models of DNSSEC <xref target="RFC4033" /> <xref
+        in use, or a provider must be able to (re)sign DNS records
+        using their own keys. This document outlines some possible
+        models of DNSSEC <xref target="RFC4033" /> <xref
         target="RFC4034" /> <xref target="RFC4035" /> deployment in
         such an environment.
       </t>
@@ -161,8 +161,8 @@
         provider (e.g., a provider that only supports "online
         signing".) In these scenarios, the multiple providers act like
         primary servers, signing data received from the zone owner and
-        serving it to DNS queriers.  Multiple providers acting as
-        primaries and signing the zone separately presents novel
+        serving it to DNS queriers.  Using multiple providers that all
+        act as primaries and sign the zone separately presents novel
         challenges and requirements.
       </t>
 
@@ -173,7 +173,7 @@
         independently sign and serve the same zone. The zone owner
         typically uses provider-specific APIs to update zone content
         at each of the providers, and relies on the provider to
-        perform signing of the data. A key requirement here is to
+        perform signing of the data.  The key requirement here is to
         manage the contents of the DNSKEY and DS RRset in such a way
         that validating resolvers always have a viable path to
         authenticate the DNSSEC signature chain no matter which
@@ -204,7 +204,7 @@
         </t>
 
         <t>
-        The following descriptions consider the case of two DNS 
+        The following descriptions consider the case of two DNS
         providers, but the model is generalizable to any number.
         </t>
 
@@ -216,7 +216,7 @@
            the signed DNSKEY RRset to the providers.</t>
         <t>Each provider has their own ZSK which is used to sign data.</t>
         <t>Providers have an API that owner uses to query the ZSK
-           public key, and insert a combined DNSKEY RRset that includes 
+           public key, and insert a combined DNSKEY RRset that includes
            both ZSKs and the KSK, signed by the KSK.</t>
         <t>Key rollovers need coordinated participation of the zone
            owner to update the DNSKEY RRset (for KSK or ZSK), and the
@@ -246,51 +246,60 @@
     <section title="Validating Resolver Behavior" anchor="resolver">
 
       <t>
-        The central requirement for both of the <xref
+        The key requirement for both of the <xref
         target="multi-sign">Multiple Signer models</xref> is to ensure
         that the ZSKs from all providers are present in each
         provider's apex DNSEY RRset, and is vouched for by either the
         single KSK (in model 1) or each provider's KSK (in model 2.)
-        
-        If this is not done, the following situation can arise (assuming
-        two providers A and B):
+        If this is not done, the following situation can arise
+        (assuming two providers A and B):
 
+      <!-- dblacka: I do find it a bit odd to describe this in the
+           negative case, but I haven't come up with a better
+           description, yet. -->
+      <list style="symbols">
+        <t>The validating resolver follows a referral (delegation)
+        to the zone in question.</t>
+        <t>It queries for and receives the zone's DNSKEY RRset from
+        one of provider A's nameservers.</t>
+        <t>At some later point in time, the validating resolver
+        attempts to resolve a name in the zone, while the DNSKEY RRset
+        received from provider A is still viable in its cache.</t>
+        <t>However, this time, it queries one of provider B's
+        nameservers to resolve the name, and obtains a response that
+        is signed by provider B's ZSK. Since provider B's ZSK is not
+        present in the cache DNSKEY RRset, the resolver cannot
+        authenticate the response. (In this case, because the response
+        RRs are signed by an unknown/untrusted DNSKEY.)</t>
+        <t>The resolver does not accept this response and considers it
+        BOGUS.</t>
+        <!-- dblacka: resolvers requerying for DNSKEY RRsets is not
+             standardized behavior, so I'm not sure it needs to be
+             mentioned here.  It probably isn't _good_ behavior,
+             either, because it is the sort of thing that leads to
+             query storms (e.g., rollover-and-die.) What to the rest
+             of you think? -->
+        <t>It is possible for a given resolver to have logic that
+        would cause it to re-query other nameservers for the zone's
+        DNSKEY RRset and/or response.  If so, this resolver would
+        eventually get all answers from a single provider's
+        nameservers and be able to successfully validate the
+        response. However, by doing so it will:
         <list style="symbols">
-        <t>The validating resolver follows a referral (delegation) to the
-        zone in question.</t>
-        <t>It retrieves the zone's DNSKEY RRset from one of provider
-        A's nameservers.</t>
-        <t>At some point in time, the resolver attempts to resolve a
-        name in the zone, while the DNSKEY RRset received from provider A
-        is still viable in its cache.</t>
-        <t>It queries one of provider B's nameservers to resolve the
-        name, and obtains a response that is signed by provider B's
-        ZSK, which it cannot authenticate because this ZSK is not present
-        in its cached DNSKEY RRset for the zone that it received from
-        provider A.</t>
-        <t>The resolver will not accept this response. It may still
-        be able to ultimately authenticate the name by querying other
-        nameservers for the zone until it elicits a response from one
-        of provider A's nameservers. But it has incurred the penalty
-        of additional roundtrips with other nameservers, with the
-        corresponding latency and processing costs. The exact number
-        of additional roundtrips depends on details of the resolver's
-        nameserver selection algorithm and the number of nameservers
-        configured at provider B.</t>
-        <t>It may also be the case that a resolver is unable to
-        provide an authenticated response because it gave up after
-        a certain number of retries or a certain amount of delay. Or
-        that downstream clients of the resolver that originated the
-        query timed out waiting for a response.
-        </t>
-        </list>
+          <t>incur possibly significant additional latency,</t>
+          <t>encounter internal retry limits, or</t>
+          <t>take long enough that the original client has timed
+          out.</t>
+        </list></t>
+      </list></t>
 
-        Zone owners will want to deploy a DNS service that responds
-        as efficiently as possible with validatable answers only, and
-        hence it is important that the DNSKEY RRset at each provider is
-        maintained with the active ZSKs of all participating providers.
-        This ensures that resolvers can validate a response no matter
-        which provider's nameservers it came from.
+      <t>
+        Zone owners will want to deploy a DNS service that responds as
+        efficiently as possible with validatable answers only, and
+        hence it is important that the DNSKEY RRset at each provider
+        is maintained with the active ZSKs of all participating
+        providers.  This ensures that resolvers can validate a
+        response no matter which provider's nameservers it came from.
       </t>
 
       <t>
@@ -315,7 +324,7 @@
       <t>
         It is RECOMMENDED that the providers use a common signing
         algorithm (and common keysizes for algorithms that support
-        variable key sizes). This ensures that the multiple providers
+        variable key sizes.) This ensures that the multiple providers
         have identical security postures and no provider is more
         vulnerable to cryptanalytic attack than the others.
       </t>
@@ -513,14 +522,13 @@
       </section>
     </section>
 
-
     <section anchor="IANA" title="IANA Considerations">
       <t>This document includes no request to IANA.</t>
     </section>
 
     <section anchor="Security" title="Security Considerations">
       <t>
-	[TBD]
+        [TBD]
       </t>
     </section>
 
