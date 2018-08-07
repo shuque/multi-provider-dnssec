@@ -1,0 +1,20 @@
+---
+version: '3'
+services:
+  provider:
+    build:
+      context: "./provider"
+    ports:
+      - "53/tcp"
+      - "53/udp"
+      - "8080/tcp"
+  manager:
+    build:
+      context: "./manager"
+    entrypoint:
+      - "/root/manager"
+      - "http://mpdnssec_provider_1:8080"
+      - "http://mpdnssec_provider_2:8080"
+      - "http://mpdnssec_provider_3:8080"
+networks:
+  default:
