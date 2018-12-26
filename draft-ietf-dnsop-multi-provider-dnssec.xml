@@ -134,12 +134,12 @@
         occasionally have requirements that preclude standard zone
         transfer techniques <xref target="RFC1995" />
         <xref target="RFC5936" />
-        : either non-standardized DNS features are
-        in use, or operationally a provider must be able to (re)sign
-        DNS records using their own keys. This document outlines some
-        possible models of DNSSEC <xref target="RFC4033" /> <xref
-        target="RFC4034" /> <xref target="RFC4035" /> deployment in
-        such an environment.
+        : either non-standardized DNS features are in use that are
+        incompatible with zone transfer, or operationally a provider
+        must be able to (re)sign DNS records using their own keys. This
+        document outlines some possible models of DNSSEC
+        <xref target="RFC4033" /> <xref target="RFC4034" />
+        <xref target="RFC4035" /> deployment in such an environment.
       </t>
 
     </section>
@@ -152,7 +152,7 @@
         present any need to substantially modify normal deployment
         models.  In these deployments there is a single signing entity
         (which may be the zone owner, one of the providers, or a
-        separate entity), while the providers generally act a secondary
+        separate entity), while the providers act as secondary
         authoritative servers for the zone.
       </t>
 
@@ -161,11 +161,10 @@
         cannot be used.  This could be due to the use of non-standard
         DNS features, or due to operational requirements of a given
         provider (e.g., a provider that only supports "online
-        signing".) In these scenarios, the multiple providers act like
-        primary servers, signing data received from the zone owner and
-        serving it to DNS queriers.  Multiple providers acting as
-        primaries and signing the zone separately presents novel
-        challenges and requirements.
+        signing".) In these scenarios, the multiple providers each act
+        like primary servers, independently signing data received from
+        the zone owner and serving it to DNS queriers. This configuration
+        presents some novel challenges and requirements.
       </t>
 
       <section title="Multiple Signer models" anchor="multi-sign">
@@ -528,8 +527,10 @@
 
     <section title="Acknowledgments">
       <t>
-        This document benefited from discussions with and
-        review from Duane Wessels.
+        The initial version of this document benefited from discussions
+        with and review from Duane Wessels. Additional helpful comments
+        were provided by Steve Crocker, Ulrich Wisser, Tony Finch, and
+        Olafur Gudmundsson.
       </t>
     </section>
 
