@@ -41,7 +41,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="info" docName="draft-huque-dnsop-multi-provider-dnssec-03" ipr="trust200902">
+<rfc category="info" docName="draft-huque-dnsop-multi-provider-dnssec-04" ipr="trust200902">
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
      you can add the attributes updates="NNNN" and obsoletes="NNNN" 
@@ -132,7 +132,9 @@
         allows the DNS service to survive a complete failure of any
         single provider. Additionally, enterprises or providers
         occasionally have requirements that preclude standard zone
-        transfer techniques: either non-standardized DNS features are
+        transfer techniques <xref target="RFC1995" />
+        <xref target="RFC5936" />
+        : either non-standardized DNS features are
         in use, or operationally a provider must be able to (re)sign
         DNS records using their own keys. This document outlines some
         possible models of DNSSEC <xref target="RFC4033" /> <xref
@@ -538,17 +540,17 @@
 
   <back>
     <references title="Normative References">
-      &RFC1995;
       &RFC4033;
       &RFC4034;
       &RFC4035;
       &RFC5155;
-      &RFC5936;
       &RFC6781;
       &RFC8198;
     </references>
 
     <references title="Informative References">
+      &RFC1995;
+      &RFC5936;
       &RFC7129;
       <reference anchor="BR-ROLLOVER"
         target="https://static.ptbl.co/static/attachments/179548/1529933472.pdf">
