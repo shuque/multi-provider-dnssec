@@ -1,5 +1,5 @@
 SOURCE  = \
-	draft-huque-dnsop-multi-provider-dnssec
+	draft-ietf-dnsop-multi-provider-dnssec
 
 all:	$(SOURCE).txt $(SOURCE).html
 
