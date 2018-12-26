@@ -1,0 +1,5 @@
+$TTL 1200
+
+example.test.		SOA	a.ns.example.test. hostmaster.example.test. 2020000688 3600 1800 2678400 1200
+example.test.		NS	c.ns.example.test.
+www.example.test.	AAAA	2001:db8::1234
