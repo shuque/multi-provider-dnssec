@@ -520,9 +520,27 @@
     </section>
 
     <section anchor="Security" title="Security Considerations">
-      <t>
-	[TBD]
+       <t>
+		  The two Multiple Signer models (Section 2.1), require providers to 
+		  have an API, which the zone owners can use to query the ZSK and insert 
+		  into combined DNSKEY RRset. In model 1 (Section 2.1.1), the API is 
+		  required to insert the signed DNSKEY RRset from Zone Owner to the providers.
+		  In model 2 (Section 2.1.2), the API is required for Zone Owner to export
+		  ZSK of provider A to provider B to be included in provider B's DNSKEY RRset.
       </t>
+      <t>
+		The API should have a pre-determined authentication mechanism between Zone Owner 
+		and providers. This is needed to prevent malicious third-party from tampering 
+		with the key material leading to possible DNSSEC failures.
+      </t>
+      <t>
+		The authentication can be but not limited to API key based or username/password 
+		based mechanism.
+       </t>
+       <t>
+		 If dynamic DNS update is used in future for exchange of key material 
+		 then it needs to be secured using TSIG mechanism [RFC2845].
+       </t>
     </section>
 
     <section title="Acknowledgments">
@@ -541,6 +559,7 @@
 
   <back>
     <references title="Normative References">
+	  &RFC2845;
       &RFC4033;
       &RFC4034;
       &RFC4035;
