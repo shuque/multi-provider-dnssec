@@ -222,6 +222,11 @@
         <t>Providers have an API that owner uses to query the ZSK
            public key, and insert a combined DNSKEY RRset that includes 
            both ZSKs and the KSK, signed by the KSK.</t>
+        <t>Note that even if the contents of the DNSKEY RRset don't change,
+           the Zone owner of course needs to periodically re-sign it as
+           signature expiration approaches. The provider API is also used
+           to thus periodically redistribute the refreshed DNSKEY RRset.
+        </t>
         <t>Key rollovers need coordinated participation of the zone
            owner to update the DNSKEY RRset (for KSK or ZSK), and the
            DS RRset (for KSK).</t>
