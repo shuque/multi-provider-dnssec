@@ -11,6 +11,7 @@
 <!ENTITY RFC4034 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4034.xml">
 <!ENTITY RFC4035 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4035.xml">
 <!ENTITY RFC5155 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5155.xml">
+<!ENTITY RFC5731 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5731.xml">
 <!ENTITY RFC5936 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5936.xml">
 <!ENTITY RFC6781 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6781.xml">
 <!ENTITY RFC7129 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7129.xml">
@@ -540,6 +541,32 @@
     </section>
 
 
+    <section anchor="Key-Management" title="Key Management Mechanism Requirements">
+      <t>
+        Managed DNS providers often have their own proprietary zone
+        configuration and data management APIs, typically utilizing
+        HTTPS/REST interfaces. So, rather than outlining a new API for
+        key management here, we describe the specific functions that the
+        provider API needs to support in order to enable the multi-signer
+        models. The Zone owner is expected to use these API functions to
+        perform key management tasks. Other mechanisms that can offer these
+        functions, if supported by the providers, include the
+        <xref target="RFC2136">DNS UPDATE protocol</xref> and
+        <xref target="RFC5731">EPP</xref>.
+      </t>
+      <t>
+        <list style="symbols">
+        <t>The API must offer a way to query the current DNSKEY RRset
+           of the provider</t>
+        <t>For model 1, the API must offer a way to import a signed
+           DNSKEY RRset and replace the current one at the provider.</t>
+        <t>For model 2, the API must offer a way to import a DNSKEY
+           record from an external provider into the current DNSKEY RRset</t>
+        </list>
+      </t>
+    </section>
+
+
     <section anchor="IANA" title="IANA Considerations">
       <t>This document includes no request to IANA.</t>
     </section>
@@ -552,10 +579,10 @@
         by malicious third parties. Many providers today offer
         REST/HTTPS APIs that utilize a number of authentication
         mechanisms (username/password, API keys etc). If DNS
-        protocol mechanisms like <xref target="RFC2136">UPDATE</xref>
-        are being used for key insertion and deletion, they should
-        similarly be strongly authenticated, e.g. by employing
-        <xref target="RFC2845">Transaction Signatures (TSIG)</xref>.
+        protocol mechanisms like UPDATE are being used for key
+        insertion and deletion, they should similarly be strongly
+        authenticated, e.g. by employing <xref target="RFC2845">
+        Transaction Signatures (TSIG)</xref>.
        </t>
 
     </section>
@@ -582,6 +609,7 @@
       &RFC4034;
       &RFC4035;
       &RFC5155;
+      &RFC5731;
       &RFC6781;
       &RFC8198;
     </references>
