@@ -261,7 +261,7 @@
         The central requirement for both of the <xref
         target="multi-sign">Multiple Signer models</xref> is to ensure
         that the ZSKs from all providers are present in each
-        provider's apex DNSEY RRset, and is vouched for by either the
+        provider's apex DNSKEY RRset, and is vouched for by either the
         single KSK (in model 1) or each provider's KSK (in model 2.)
 
         If this is not done, the following situation can arise (assuming
@@ -357,7 +357,7 @@
       <t>
         Authentiated denial of existence enables a resolver to validate that
         a record does not exist. For this purpose, an authoritative server
-        presents in a response to the resolver special NSEC (Section 3.1.3 of
+        presents, in a response to the resolver, NSEC (Section 3.1.3 of
         <xref target="RFC4035" />) or NSEC3 (Section 7.2 of <xref
         target="RFC5155" />) records. The NSEC3 method enhances NSEC by
         providing opt-out for signing insecure delegations and also adds
