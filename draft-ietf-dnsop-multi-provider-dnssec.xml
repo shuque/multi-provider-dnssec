@@ -526,9 +526,24 @@
     </section>
 
 
+    <section anchor="Provider-Handoff" title="Inter Provider Handoff">
+      <t>
+        The primary use case for the models presented in this draft are
+        for steady state operation of multiple concurrent signing providers.
+        But they can also be leveraged in a fairly straightforward manner
+        to perform non-disruptive transfer of a signed DNS domain from
+        one provider to another. This involves initially bringing the
+        new provider into a multi-provider configuration, and then at a
+        later time detaching the old provider. [TBD: flesh out this use
+        case in more detail.]
+      </t>
+    </section>
+
+
     <section anchor="IANA" title="IANA Considerations">
       <t>This document includes no request to IANA.</t>
     </section>
+
 
     <section anchor="Security" title="Security Considerations">
       <t>
