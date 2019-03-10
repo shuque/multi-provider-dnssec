@@ -5,6 +5,8 @@
      An alternate method (rfc include) is described in the references. -->
 
 <!ENTITY RFC1995 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.1995.xml">
+<!ENTITY RFC2136 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2136.xml">
+<!ENTITY RFC2845 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2845.xml">
 <!ENTITY RFC4033 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4033.xml">
 <!ENTITY RFC4034 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4034.xml">
 <!ENTITY RFC4035 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4035.xml">
@@ -530,8 +532,17 @@
 
     <section anchor="Security" title="Security Considerations">
       <t>
-	[TBD]
-      </t>
+	The Zone key import APIs required by these models need to be
+        strongly authenticated to prevent tampering of key material
+        by malicious third parties. Many providers today offer
+        REST/HTTPS APIs that utilize a number of authentication
+        mechanisms (username/password, API keys etc). If DNS
+        protocol mechanisms like <xref target="RFC2136">UPDATE</xref>
+        are being used for key insertion and deletion, they should
+        similarly be strongly authenticated, e.g. by employing
+        <xref target="RFC2845">Transaction Signatures (TSIG)</xref>.
+       </t>
+
     </section>
 
     <section title="Acknowledgments">
@@ -550,6 +561,8 @@
 
   <back>
     <references title="Normative References">
+      &RFC2136;
+      &RFC2845;
       &RFC4033;
       &RFC4034;
       &RFC4035;
