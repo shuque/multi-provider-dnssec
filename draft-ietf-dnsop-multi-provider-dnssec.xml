@@ -564,6 +564,13 @@
            record from an external provider into the current DNSKEY RRset</t>
         </list>
       </t>
+      <t>
+        In model 2, once initially bootstrapped with each others zone
+        signing keys via these API mechanisms, providers could, if desired,
+        periodically query each others DNSKEY RRsets and automatically
+        import or withdraw ZSKs in the keyset as key rollover events
+        happen.
+      </t>
     </section>
 
 
