@@ -397,12 +397,12 @@
 
       <section title="Mixing Methods">
         <t>
-          Compliant resolvers should be able to serve zones when different
-          authoritative servers for the same zone respond with different
-          authentiated denial methods because this is normally observed when
-          NSEC and NSEC3 are being switched or when NSEC3PARAM is updated.
+          Compliant resolvers should be able to validate zone data when
+          different authoritative servers for the same zone respond with
+          different authentiated denial methods because this is normally
+          observed when NSEC and NSEC3 are being switched or when NSEC3PARAM
+          is updated.
         </t>
-
         <t>
           Resolver software may be however designed to handle a single
           transition between two authenticated denial configurations more
