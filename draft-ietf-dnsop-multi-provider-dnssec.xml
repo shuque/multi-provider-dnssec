@@ -15,6 +15,8 @@
 <!ENTITY RFC5936 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5936.xml">
 <!ENTITY RFC6781 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6781.xml">
 <!ENTITY RFC7129 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7129.xml">
+<!ENTITY RFC7344 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7344.xml">
+<!ENTITY RFC8078 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8078.xml">
 <!ENTITY RFC8198 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8198.xml">
 <!ENTITY I-D.narten-iana-considerations-rfc2434bis SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.narten-iana-considerations-rfc2434bis.xml">
 ]>
@@ -529,7 +531,9 @@
 
     <section anchor="CDS-CDNSKEY" title="Use of CDS and CDNSKEY">
       <t>
-        CDS and CDNSKEY records are used to facilitate automated updates
+        CDS and CDNSKEY records <xref target="RFC7344" />
+        <xref target="RFC8078" />
+        are used to facilitate automated updates
         of DNSSEC secure entry point keys between parent and child
         zones. Multi-signer DNSSEC configurations can support this too.
         In Model 1, CDS/CDNSKEY changes are centralized at the zone owner.
@@ -625,6 +629,8 @@
       &RFC5155;
       &RFC5731;
       &RFC6781;
+      &RFC7344;
+      &RFC8078;
       &RFC8198;
     </references>
 
