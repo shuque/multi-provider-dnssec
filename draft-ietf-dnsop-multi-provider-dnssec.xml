@@ -527,6 +527,22 @@
     </section>
 
 
+    <section anchor="CDS-CDNSKEY" title="Use of CDS and CDNSKEY">
+      <t>
+        CDS and CDNSKEY records are used to facilitate automated updates
+        of DNSSEC secure entry point keys between parent and child
+        zones. Multi-signer DNSSEC configurations can support this too.
+        In Model 1, CDS/CDNSKEY changes are centralized at the zone owner.
+        However, the zone owner will still need to push down updated
+        signed CDNS/DNSKEY RRsets to the providers via the key management
+        mechanism. In Model 2, the key management mechanism needs to
+        support cross importation of the CDS/CDNSKEY records, so that a
+        common view of the RRset can be constructed at each provider, and
+        is visible to the parent zone attempting to update the DS RRset.
+      </t>
+    </section>
+
+
     <section anchor="Key-Management" title="Key Management Mechanism Requirements">
       <t>
         Managed DNS providers often have their own proprietary zone
@@ -545,9 +561,14 @@
         <t>The API must offer a way to query the current DNSKEY RRset
            of the provider</t>
         <t>For model 1, the API must offer a way to import a signed
-           DNSKEY RRset and replace the current one at the provider.</t>
+           DNSKEY RRset and replace the current one at the provider.
+           Additionally, if CDS/CDNSKEY is supported, the API must also
+           offer a way to import a signed CDS/CDNSKEY RRset.</t>
         <t>For model 2, the API must offer a way to import a DNSKEY
-           record from an external provider into the current DNSKEY RRset</t>
+           record from an external provider into the current DNSKEY
+           RRset. Additionally, if CDS/CDNSKEY is supported, the
+           API must offer a mechanism to import individual CDS/CDNSKEY
+           records from an external provider.</t>
         </list>
       </t>
       <t>
