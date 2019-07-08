@@ -1,5 +1,5 @@
-# Multi Provider DNSSEC models
-IETF draft to describe multi provider DNSSEC models
+# Multi Signer DNSSEC models
+IETF draft to describe multi signer DNSSEC models
 
 
 Many enterprises today employ the service of multiple DNS providers to
