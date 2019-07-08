@@ -44,7 +44,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="info" docName="draft-ietf-dnsop-multi-provider-dnssec-01" ipr="trust200902">
+<rfc category="info" docName="draft-ietf-dnsop-multi-provider-dnssec-02" ipr="trust200902">
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
      you can add the attributes updates="NNNN" and obsoletes="NNNN" 
@@ -53,7 +53,7 @@
   <!-- ***** FRONT MATTER ***** -->
 
   <front>
-    <title abbrev="Multi Provider DNSSEC models">Multi Provider DNSSEC models</title>
+    <title abbrev="Multi Signer DNSSEC models">Multi Signer DNSSEC models</title>
 
     <author fullname="Shumon Huque" initials="S." surname="Huque">
       <organization>Salesforce</organization>
@@ -95,7 +95,7 @@
       </address>
     </author>
 
-    <date month="March" year="2019" />
+    <date month="July" year="2019" />
 
     <!-- Meta-data Declarations -->
 
