@@ -544,15 +544,18 @@
       <t>
         Model 2 can accommodate CSKs without issue. In this case, any or all
         the providers could employ a CSK. The DS record in the parent zone
-        would reference the provider's CSK instead of KSK. A CSK key rollover
-        for such a provider would involve the following: The provider
-        generates a new CSK, installs the new CSK into the DNSKEY RRset, and
-        signs it with both the old and new CSK. The new CSK is communicated
-        to the Zone Owner, who replaces the DS record referencing the old
-        CSK with one referencing the new one in the parent DS RRset. Once
-        all the zone data has been re-signed with the new CSK, the old CSK
-        is removed from the DNSKEY RRset, and the latter is re-signed with
-        only the new CSK.
+        would reference the provider's CSK instead of KSK, and the public
+        CSK will need to be imported into the DNSKEY RRsets of all the other
+        providers. A CSK key rollover for such a provider would involve the
+        following: The provider generates a new CSK, installs the new CSK
+        into the DNSKEY RRset, and signs it with both the old and new CSK.
+        The new CSK is communicated to the Zone Owner. The Zone Owner exports
+        this CSK into the other provider's DNSKEY RRsets and replaces the DS
+        record referencing the old CSK with one referencing the new one in
+        the parent DS RRset. Once all the zone data has been re-signed with
+        the new CSK, the old CSK is removed from the DNSKEY RRset, and the
+        latter is re-signed with only the new CSK. Finally, the old CSK is
+        removed from the DNSKEY RRsets of the other providers.
       </t>
     </section>
 
