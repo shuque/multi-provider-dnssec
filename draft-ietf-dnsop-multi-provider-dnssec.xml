@@ -46,7 +46,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="info" docName="draft-ietf-dnsop-multi-provider-dnssec-02" ipr="trust200902">
+<rfc category="info" docName="draft-ietf-dnsop-multi-provider-dnssec-03" ipr="trust200902">
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: full3667, noModification3667, noDerivatives3667
      you can add the attributes updates="NNNN" and obsoletes="NNNN" 
@@ -526,6 +526,34 @@
         </list>
         </t>
       </section>
+    </section>
+
+
+    <section anchor="CSK" title="Using Combined Signing Keys">
+      <t>
+        A Combined Signing Key (CSK), is one in which the same key serves the
+        purpose of being both the secure entry point (SEP) key for the zone,
+        and also for signing all the zone data including the DNSKEY RRset
+        (i.e. there is no KSK/ZSK split).
+      </t>
+      <t>
+        Model 1 is not compatible with CSKs because the zone owner would then
+        hold the sole signing key, and providers would not be able to sign
+        their own zone data.
+      </t>
+      <t>
+        Model 2 can accommodate CSKs without issue. In this case, any or all
+        the providers could employ a CSK. The DS record in the parent zone
+        would reference the provider's CSK instead of KSK. A CSK key rollover
+        for such a provider would involve the following: The provider
+        generates a new CSK, installs the new CSK into the DNSKEY RRset, and
+        signs it with both the old and new CSK. The new CSK is communicated
+        to the Zone Owner, who replaces the DS record referencing the old
+        CSK with one referencing the new one in the parent DS RRset. Once
+        all the zone data has been re-signed with the new CSK, the old CSK
+        is removed from the DNSKEY RRset, and the latter is re-signed with
+        only the new CSK.
+      </t>
     </section>
 
 
