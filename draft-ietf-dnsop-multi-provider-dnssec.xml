@@ -610,12 +610,16 @@
         The Multi-Signer models described in this document result in
         larger DNSKEY RRsets, so the DNSKEY response size will be
         larger. The actual size depends on multiple factors: DNSKEY
-        algorithm and keysize choices, the number of providers, how many
-        simultaneous key rollovers are in progress etc. Newer elliptic
-        curve algorithms produce keys small enough that the responses
-        will typically be far below the common Internet path MTU, and thus
-        operational issues related to IP fragmentation or truncation and
-        TCP fallback are unlikely to be encountered.
+        algorithm and keysize choices, the number of providers, whether
+        additional keys are pre-published, how many simultaneous key
+        rollovers are in progress etc. Newer elliptic curve algorithms
+        produce keys small enough that the responses will typically be far
+        below the common Internet path MTU, and thus operational concerns
+        related to IP fragmentation or truncation and TCP fallback are
+        unlikely to be encountered. In any case, DNS operators need to ensure
+        that they can emit and process large DNS responses when necessary,
+        and a future migration to alternative transports like DNS over TLS
+        or HTTPS may make this topic moot.
       </t>
     </section>
 
