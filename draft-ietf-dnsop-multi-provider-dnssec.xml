@@ -332,30 +332,14 @@
     <section title="Signing Algorithm Considerations" anchor="algorithms">
 
       <t>
-        It is RECOMMENDED that the providers use a common signing
-        algorithm (and common keysizes for algorithms that support
-        variable key sizes). This ensures that the multiple providers
-        have identical security postures and no provider is more
-        vulnerable to cryptanalytic attack than the others.
-      </t>
-      <t>
-        It may however be possible to deploy a configuration where
-        different providers use different signing algorithms. The
-        main impediment is that current DNSSEC specifications require
-        that if there are multiple algorithms in the DNSKEY RRset, then
-        RRsets in the zone need to be signed with at least one DNSKEY of
-        each algorithm, as described in <xref target="RFC4035">RFC 4035</xref>,
-        Section 2.2. However <xref target="RFC6781">RFC 6781</xref>,
-        Section 4.1.4, also describes both a conservative and liberal
-        interpretation of this requirement. When validating DNS resolvers
-        follow the liberal approach, they do not expect that zone RRsets
-        are signed by every signing algorithm in the DNSKEY RRset, and
-        responses with single algorithm signatures can be validated
-        correctly assuming a valid chain of trust exists. In fact,
-        <xref target="BR-ROLLOVER">testing by the .BR Top Level domain
-        for their recent algorithm rollover</xref>, demonstrates that
-        the liberal approach does in fact work with current resolvers
-        deployed on the Internet.
+        DNS providers participating in multi-signer models need to use
+        a common DNSSEC signing algorithm. This is because the current
+        specifications require that if there are multiple algorithms in
+        the DNSKEY RRset, then RRsets in the zone need to be signed with
+        at least one DNSKEY of each algorithm, as described in
+        <xref target="RFC4035">RFC 4035</xref>, Section 2.2. If providers
+        employ distinct signing algorithms, then this requirement cannot
+        be satisfied.
       </t>
 
     </section>
@@ -689,15 +673,6 @@
       &RFC1995;
       &RFC5936;
       &RFC7129;
-      <reference anchor="BR-ROLLOVER"
-        target="https://static.ptbl.co/static/attachments/179548/1529933472.pdf">
-        <front>
-          <title>.br DNSSEC Algorithm Rollover Update</title>
-          <author initials="F." surname="Neves"><organization /></author>
-          <date year="2018" month="June" />
-        </front>
-        <seriesInfo name="in" value="ICANN 62 DNSSEC Workshop" />
-      </reference>
       <reference anchor="BLACKLIES"
                  target="https://tools.ietf.org/html/draft-valsorda-dnsop-black-lies">
         <front>
