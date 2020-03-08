@@ -306,9 +306,7 @@
         </t>
         </list>
 
-        Zone owners will want to deploy a DNS service that responds
-        as efficiently as possible with validatable answers only, and
-        hence it is important that the DNSKEY RRset at each provider is
+        Hence, it is important that the DNSKEY RRset at each provider is
         maintained with the active ZSKs of all participating providers.
         This ensures that resolvers can validate a response no matter
         which provider's nameservers it came from.
