@@ -20,6 +20,7 @@
 <!ENTITY RFC8078 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8078.xml">
 <!ENTITY RFC8198 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8198.xml">
 <!ENTITY RFC8484 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8484.xml">
+<!ENTITY RFC8499 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8499.xml">
 <!ENTITY I-D.narten-iana-considerations-rfc2434bis SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.narten-iana-considerations-rfc2434bis.xml">
 ]>
 
@@ -155,6 +156,12 @@
         <xref target="RFC4033" /> <xref target="RFC4034" />
         <xref target="RFC4035" /> deployment in such an environment.
       </t>
+      <t>
+        This document assumes a general level of familiarity with
+        DNS protocol and operations. Much of the terminology is
+        explained in further detail in <xref target="RFC8499"/>.
+      </t>
+
 
     </section>
 
@@ -696,6 +703,7 @@
       &RFC7129;
       &RFC7858;
       &RFC8484;
+      &RFC8499;
       <reference anchor="BLACKLIES"
                  target="https://tools.ietf.org/html/draft-valsorda-dnsop-black-lies">
         <front>
