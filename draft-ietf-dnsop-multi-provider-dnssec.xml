@@ -97,7 +97,7 @@
       </address>
     </author>
 
-    <date month="March" year="2020" />
+    <date month="April" year="2020" />
 
     <!-- Meta-data Declarations -->
 
@@ -381,7 +381,7 @@
         <t>
           Usually, the NSEC and NSEC3 methods are used exclusively (i.e. the
           methods are not used at the same time by different servers). This
-          configuration is prefered because the behavior is well-defined and
+          configuration is preferred because the behavior is well-defined and
           it's closest to the current operational practice.
         </t>
       </section>
@@ -401,7 +401,7 @@
           methods. This could make caching on the resolver side less
           efficient and the authoritative servers may observe higher number
           of queries. This aspect should be considered especially in context
-          of <xref target="RFC8198" >Aggresive Use of DNSSEC-Validated
+          of <xref target="RFC8198" >Aggressive Use of DNSSEC-Validated
           Cache</xref>.
         </t>
         <t>
@@ -467,16 +467,19 @@
           would generate a new ZSK and communicate their intent to perform a
           rollover (note that Provider A cannot immediately insert this new
           ZSK into their DNSKEY RRset because the RRset has to be signed by
-          the Zone Owner). The Zone Owner obtains the new ZSK from Provider A.
-          It then obtains the current DNSKEY RRset from each provider (including
-          Provider A), inserts the new ZSK into each DNSKEY RRset, re-signs
-          the DNSKEY RRset, and sends it back to each provider for deployment
-          via their respective key management APIs. Once the necessary time
-          period is elapsed (i.e. all zone data has been re-signed by the
-          new ZSK and propagated to all authoritative servers for the
-          zone, plus the maximum zone TTL value of any of the data in
-          the zone signed by the old ZSK), Provider A and the zone owner
-          can initiate the next phase of removing the old ZSK.
+          the Zone Owner). The mechanism to communicate this intent could be
+          some secure out-of-band channel that has been agreed upon, or the
+          provider could offer an API function that could be periodically
+          polled by the Zone Owner. The Zone Owner obtains the new ZSK from
+          Provider A. It then obtains the current DNSKEY RRset from each
+          provider (including Provider A), inserts the new ZSK into each DNSKEY
+          RRset, re-signs the DNSKEY RRset, and sends it back to each provider
+          for deployment via their respective key management APIs. Once the
+          necessary time period is elapsed (i.e. all zone data has been
+          re-signed by the new ZSK and propagated to all authoritative servers
+          for the zone, plus the maximum zone TTL value of any of the data in
+          the zone signed by the old ZSK), Provider A and the zone owner can
+          initiate the next phase of removing the old ZSK.
         </t>
         </list>
         </t>
@@ -639,7 +642,9 @@
         protocol mechanisms like UPDATE are being used for key
         insertion and deletion, they should similarly be strongly
         authenticated, e.g. by employing <xref target="RFC2845">
-        Transaction Signatures (TSIG)</xref>.
+        Transaction Signatures (TSIG)</xref>. Key Generation and
+        other general security related operations should follow
+        the guidance specified in <xref target="RFC6781"/>.
        </t>
 
     </section>
