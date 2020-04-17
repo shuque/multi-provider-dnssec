@@ -121,7 +121,7 @@
         challenges depending on the configuration and feature set
         in use. In particular, when each DNS provider independently
         signs zone data with their own keys, additional key management
-        mechanisms are necessitated. This document presents deployment
+        mechanisms are necessary. This document presents deployment
         models that accommodate this scenario and describe these key
         management requirements. These models do not require any changes
         to the behavior of validating resolvers, nor do they impose the
@@ -137,9 +137,9 @@
 
     <section title="Introduction and Motivation">
       <t>
-        RFC EDITOR: PLEASE REMOVE THE FOLLOWING PARAGRAPH BEFORE
-        PUBLISHING: The source for this draft is maintained in GitHub
-        at: https://github.com/shuque/multi-provider-dnssec
+        RFC EDITOR: PLEASE REMOVE THIS PARAGRAPH BEFORE PUBLISHING:
+        The source for this draft is maintained in GitHub at:
+        https://github.com/shuque/multi-provider-dnssec
       </t>
       <t>
         Many enterprises today employ the service of multiple DNS
@@ -157,9 +157,9 @@
         <xref target="RFC4035" /> deployment in such an environment.
       </t>
       <t>
-        This document assumes a general level of familiarity with
-        DNS protocol and operations. Much of the terminology is
-        explained in further detail in <xref target="RFC8499"/>.
+        This document assumes a reasonable level of familiarity with
+        DNS operations and protocol terms. Much of the terminology
+        is explained in further detail in <xref target="RFC8499"/>.
       </t>
 
 
@@ -194,8 +194,8 @@
         In this category of models, multiple providers each
         independently sign and serve the same zone. The zone owner
         typically uses provider-specific APIs to update zone content
-        at each of the providers, and relies on the provider to
-        perform signing of the data. A key requirement here is to
+        identically at each of the providers, and relies on the provider
+        to perform signing of the data. A key requirement here is to
         manage the contents of the DNSKEY and DS RRset in such a way
         that validating resolvers always have a viable path to
         authenticate the DNSSEC signature chain no matter which
@@ -212,8 +212,9 @@
         dynamically at query time, one method is for the provider to
         perform online signing (also known as on-the-fly signing). However,
         another possible approach is to pre-compute all the possible
-        response sets and associated signatures and then algorithmically
-        determine at query time which response set needs to be returned.
+        response sets and associated signatures, and then algorithmically
+        determine at query time which response set and signature needs
+        to be returned.
         </t>
 
         <!-- davib: unsure if this paragraph is needed -->
@@ -228,42 +229,44 @@
         directly communicate to share keys.
         </t>
 
-        <t>
-        The following descriptions consider the case of two DNS 
-        providers, but the model is generalizable to any number.
-        </t>
-
-        <section title="Model 1: Common KSK, Unique ZSK per provider" anchor="model1">
+        <section title="Model 1: Common KSK set, Unique ZSK set per provider" anchor="model1">
         <t>
         <list style="symbols">
-        <t>Zone owner holds the KSK, manages the DS record, and is
-           responsible for signing the DNSKEY RRset and distributing
+        <t>The zone owner holds the KSK set, manages the DS record set,
+           and is responsible for signing the DNSKEY RRset and distributing
            the signed DNSKEY RRset to the providers.</t>
-        <t>Each provider has their own ZSK which is used to sign data.</t>
-        <t>Providers have an API that owner uses to query the ZSK
-           public key, and insert a combined DNSKEY RRset that includes 
-           both ZSKs and the KSK, signed by the KSK.</t>
-        <t>Note that even if the contents of the DNSKEY RRset don't change,
-           the Zone owner of course needs to periodically re-sign it as
-           signature expiration approaches. The provider API is also used
-           to thus periodically redistribute the refreshed DNSKEY RRset.
-        </t>
+        <t>Each provider has their own ZSK set which is used to sign data.</t>
+        <t>Providers have an API that the zone owner uses to query the ZSK
+           public keys, and insert a combined DNSKEY RRset that includes
+           the ZSK sets of each provider, and the KSK set, signed by the KSK.</t>
+        <t>Note that even if the contents of the DNSKEY RRset do not change,
+           the zone owner needs to periodically re-sign it as signature
+           expiration approaches. The provider API is also used
+           to thus periodically redistribute the refreshed DNSKEY RRset.</t>
         <t>Key rollovers need coordinated participation of the zone
            owner to update the DNSKEY RRset (for KSK or ZSK), and the
            DS RRset (for KSK).</t>
+        <t>(One specific variant of this model that may be interesting is
+           a configuration in which there is only one provider. A possible
+           use case for this is where the zone owner wants to outsource the
+           signing and operation of their DNS zone to a single 3rd party
+           provider, but still control the KSK, so that they can authorize
+           and/or revoke the use of specific zone signing keys.)</t>
         </list>
         </t>
         </section>
 
-        <section title="Model 2: Unique KSK and ZSK per provider" anchor="model2">
+        <section title="Model 2: Unique KSK set and ZSK set per provider" anchor="model2">
         <t>
         <list style="symbols">
-        <t>Each provider has their own KSK and ZSK.</t>
-        <t>Each provider offers an API that the Zone Owner uses to import
-           the ZSK of the other provider into their DNSKEY RRset.</t>
-        <t>DNSKEY RRset is signed independently by each provider using
+        <t>Each provider has their own KSK and ZSK sets.</t>
+        <t>Each provider offers an API that the zone owner uses to import
+           the ZSK sets of the other providers into their DNSKEY RRset.</t>
+        <t>The DNSKEY RRset is signed independently by each provider using
            their own KSK.</t>
-        <t>Zone Owner manages the DS RRset that includes both KSKs.</t>
+        <t>The zone owner manages the DS RRset located in the parent zone.
+           This is comprised of DS records corresponding to the KSKs of
+           each provider.</t>
         <t>Key rollovers need coordinated participation of the zone
            owner to update the DS RRset (for KSK), and the DNSKEY
            RRset (for ZSK).</t>
@@ -289,7 +292,7 @@
         <t>The validating resolver follows a referral (delegation) to the
         zone in question.</t>
         <t>It retrieves the zone's DNSKEY RRset from one of provider
-        A's nameservers.</t>
+        A's nameservers, authenticates and caches it.</t>
         <t>At some point in time, the resolver attempts to resolve a
         name in the zone, while the DNSKEY RRset received from provider A
         is still viable in its cache.</t>
@@ -324,12 +327,12 @@
       <t>
         Details of how the DNSKEY RRset itself is validated differ.
         In <xref target="model1">model 1</xref>, one unique KSK
-        managed by the Zone Owner signs an identical DNSKEY RRset
+        managed by the zone owner signs an identical DNSKEY RRset
         deployed at each provider, and the signed DS record in the
         parent zone refers to this KSK. In <xref
         target="model2">model 2</xref>, each provider has a
-        distinct KSK and signs the DNSKEY RRset with it.  The Zone
-        Owner deploys a DS RRset at the parent zone that contains
+        distinct KSK and signs the DNSKEY RRset with it.  The zone
+        owner deploys a DS RRset at the parent zone that contains
         multiple DS records, each referring to a distinct provider's
         KSK. Hence it does not matter which provider's nameservers the
         resolver obtains the DNSKEY RRset from, the signed DS record
@@ -342,10 +345,11 @@
 
       <t>
         DNS providers participating in multi-signer models need to use
-        a common DNSSEC signing algorithm. This is because the current
-        specifications require that if there are multiple algorithms in
-        the DNSKEY RRset, then RRsets in the zone need to be signed with
-        at least one DNSKEY of each algorithm, as described in
+        a common DNSSEC signing algorithm (or a common set of algorithms
+        if multiple are in use). This is because the current specifications
+        require that if there are multiple algorithms in the DNSKEY RRset,
+        then RRsets in the zone need to be signed with at least one DNSKEY
+        of each algorithm, as described in
         <xref target="RFC4035">RFC 4035</xref>, Section 2.2. If providers
         employ distinct signing algorithms, then this requirement cannot
         be satisfied.
@@ -357,9 +361,10 @@
       <t>
         Authenticated denial of existence enables a resolver to validate that
         a record does not exist. For this purpose, an authoritative server
-        presents, in a response to the resolver, NSEC (Section 3.1.3 of
+        presents, in a response to the resolver, signed NSEC (Section 3.1.3 of
         <xref target="RFC4035" />) or NSEC3 (Section 7.2 of <xref
-        target="RFC5155" />) records. The NSEC3 method enhances NSEC by
+        target="RFC5155" />) records that provide cryptographic proof of
+        this non-existence. The NSEC3 method enhances NSEC by
         providing opt-out for signing insecure delegations and also adds
         limited protection against zone enumeration attacks.
       </t>
@@ -367,7 +372,7 @@
       <t>
         An authoritative server response carrying records for authenticated
         denial is always self-contained and the receiving resolver doesn't
-        need to send additional queries to complete the denial proof data.
+        need to send additional queries to complete the proof of denial.
         For this reason, no rollover is needed when switching between NSEC
         and NSEC3 for a signed zone.
       </t>
@@ -393,7 +398,7 @@
           Usually, the NSEC and NSEC3 methods are used exclusively (i.e. the
           methods are not used at the same time by different servers). This
           configuration is preferred because the behavior is well-defined and
-          it's closest to the current operational practice.
+          is closest to current operational practice.
         </t>
       </section>
 
@@ -411,14 +416,14 @@
           optimally than a permanent setup with mixed authenticated denial
           methods. This could make caching on the resolver side less
           efficient and the authoritative servers may observe higher number
-          of queries. This aspect should be considered especially in context
-          of <xref target="RFC8198" >Aggressive Use of DNSSEC-Validated
+          of queries. This aspect should be considered especially in the
+          context of <xref target="RFC8198" >Aggressive Use of DNSSEC-Validated
           Cache</xref>.
         </t>
         <t>
-          In case all providers cannot be configured for a matching
-          authenticated denial, it is advised to find lowest number of
-          possible configurations possible across all used providers.
+          In case all providers cannot be configured with the same
+          authenticated denial mechanism, it is recommended to limit
+          the distinct configurations to the lowest number feasible.
         </t>
 
         <t>
@@ -427,11 +432,6 @@
         </t>
       </section>
 
-      <!--
-        Current implementations of Aggressive NSEC work with NSEC only.
-        Knot Resolver plans to store "last two configrations" to handle rollovers.
-      -->
-
     </section>
 
     <section title="Key Rollover Considerations" anchor="keyrollover">
@@ -439,18 +439,19 @@
         The <xref target="multi-sign">Multiple Signer</xref> models
         introduce some new requirements for DNSSEC key rollovers.
         Since this process necessarily involves coordinated actions on
-        the part of providers and the Zone Owner, one reasonable
-        strategy is for the Zone Owner to initiate key rollover
+        the part of providers and the zone owner, one reasonable
+        strategy is for the zone owner to initiate key rollover
         operations. But other operationally plausible models may also
         suit, such as a DNS provider initiating a key rollover and
-        signaling their intent to the Zone Owner in some manner.
+        signaling their intent to the zone owner in some manner.
       </t>
       <t>
-        The descriptions in this section assume that KSK rollovers
-        employ the commonly used Double Signature KSK Rollover Method,
-        and that ZSK rollovers employ the Pre-Publish ZSK Rollover
+        The descriptions in this section assume two DNS providers
+        for simplicity. They also assume that KSK rollovers employ
+        the commonly used Double Signature KSK Rollover Method, and
+        that ZSK rollovers employ the Pre-Publish ZSK Rollover
         Method, as described in detail in <xref target="RFC6781"/>.
-        With minor modifications, they can also be easily adapted to
+        With minor modifications, they can be easily adapted to
         other models, such as Double DS KSK Rollover or Double
         Signature ZSK rollover, if desired. Key use timing should
         follow the recommendations outlined in <xref target="RFC6781"/>,
@@ -466,12 +467,13 @@
         <list style="symbols">
         <t>
           Key Signing Key Rollover: In this model, the two managed DNS
-          providers share a common KSK which is held by the Zone Owner. To
-          initiate the rollover, the Zone Owner generates a new KSK and obtains
+          providers share a common KSK (public key) in their respective
+          zones, and the zone owner controls the KSK signing key. To
+          initiate the rollover, the zone owner generates a new KSK and obtains
           the DNSKEY RRset of each DNS provider using their respective APIs.
           The new KSK is added to each provider's DNSKEY RRset and the RRset
           is re-signed with both the new and the old KSK. This new DNSKEY RRset
-          is then transferred to each provider. The Zone Owner then updates
+          is then transferred to each provider. The zone owner then updates
           the DS RRset in the parent zone to point to the new KSK, and after
           the necessary DS record TTL period has expired, proceeds with
           updating the DNSKEY RRSet to remove the old KSK.
@@ -479,14 +481,14 @@
         <t>
           Zone Signing Key Rollover: In this model, each DNS provider has
           separate Zone Signing Keys. Each provider can choose to roll their
-          ZSK independently by co-ordinating with the Zone Owner. Provider A
+          ZSK independently by co-ordinating with the zone owner. Provider A
           would generate a new ZSK and communicate their intent to perform a
           rollover (note that Provider A cannot immediately insert this new
           ZSK into their DNSKEY RRset because the RRset has to be signed by
-          the Zone Owner). The mechanism to communicate this intent could be
+          the zone owner). The mechanism to communicate this intent could be
           some secure out-of-band channel that has been agreed upon, or the
           provider could offer an API function that could be periodically
-          polled by the Zone Owner. The Zone Owner obtains the new ZSK from
+          polled by the zone owner. The zone owner obtains the new ZSK from
           Provider A. It then obtains the current DNSKEY RRset from each
           provider (including Provider A), inserts the new ZSK into each DNSKEY
           RRset, re-signs the DNSKEY RRset, and sends it back to each provider
@@ -509,12 +511,12 @@
           Key Signing Key Rollover: In Model 2, each managed DNS provider
           has their own KSK. A KSK roll for provider A does not require any
           change in the DNSKEY RRset of provider B, but does require
-          co-ordination with the Zone Owner in order to get the DS record
+          co-ordination with the zone owner in order to get the DS record
           set in the parent zone updated. The KSK roll starts with Provider
           A generating a new KSK and including it in their DNSKEY RRSet.
           The DNSKey RRset would then be signed by both the new and old KSK.
-          The new KSK is communicated to the Zone Owner, after which the Zone
-          Owner updates the DS RRset to replace the DS record for the old KSK
+          The new KSK is communicated to the zone owner, after which the zone
+          owner updates the DS RRset to replace the DS record for the old KSK
           with a DS record for the new KSK. After the necessary DS RRset TTL
           period has elapsed, the old KSK can be removed from provider A's
           DNSKEY RRset.
@@ -524,11 +526,11 @@
           has their own ZSK. The ZSK roll for provider A would start with
           them generating new ZSK and including it in their DNSKEY RRset and
           re-signing the new DNSKEY RRset with their KSK. The new ZSK of
-          provider A would then be communicated to the Zone Owner, who will
+          provider A would then be communicated to the zone owner, who will
           initiate the process of importing this ZSK into the DNSKEY RRsets
           of the other providers, using their respective APIs. Once the
           necessary Pre-Publish key rollover time periods have elapsed,
-          provider A and the Zone Owner can initiate the process of removing
+          provider A and the zone owner can initiate the process of removing
           the old ZSK from the DNSKEY RRset of all providers.
         </t>
         </list>
@@ -557,7 +559,7 @@
         providers. A CSK key rollover for such a provider would involve the
         following: The provider generates a new CSK, installs the new CSK
         into the DNSKEY RRset, and signs it with both the old and new CSK.
-        The new CSK is communicated to the Zone Owner. The Zone Owner exports
+        The new CSK is communicated to the zone owner. The zone owner exports
         this CSK into the other provider's DNSKEY RRsets and replaces the DS
         record referencing the old CSK with one referencing the new one in
         the parent DS RRset. Once all the zone data has been re-signed with
@@ -588,14 +590,14 @@
 
     <section anchor="Key-Management" title="Key Management Mechanism Requirements">
       <t>
-        Managed DNS providers often have their own proprietary zone
-        configuration and data management APIs, typically utilizing
+        Managed DNS providers typically have their own proprietary zone
+        configuration and data management APIs, commonly utilizing
         HTTPS/REST interfaces. So, rather than outlining a new API for
         key management here, we describe the specific functions that the
         provider API needs to support in order to enable the multi-signer
-        models. The Zone owner is expected to use these API functions to
-        perform key management tasks. Other mechanisms that can offer these
-        functions, if supported by the providers, include the
+        models. The zone owner is expected to use these API functions to
+        perform key management tasks. Other mechanisms that can partly
+        offer these functions, if supported by the providers, include the
         <xref target="RFC2136">DNS UPDATE protocol</xref> and
         <xref target="RFC5731">EPP</xref>.
       </t>
@@ -617,9 +619,9 @@
       <t>
         In model 2, once initially bootstrapped with each other's zone
         signing keys via these API mechanisms, providers could, if desired,
-        periodically query each other's DNSKEY RRsets and automatically
-        import or withdraw ZSKs in the keyset as key rollover events
-        happen.
+        periodically query each other's DNSKEY RRsets, authenticate their
+        signatures,  and automatically import or withdraw ZSKs in the keyset
+        as key rollover events happen.
       </t>
     </section>
 
@@ -633,10 +635,10 @@
         additional keys are pre-published, how many simultaneous key
         rollovers are in progress etc. Newer elliptic curve algorithms
         produce keys small enough that the responses will typically be far
-        below the common Internet path MTU, and thus operational concerns
+        below the common Internet path MTU. Thus operational concerns
         related to IP fragmentation or truncation and TCP fallback are
         unlikely to be encountered. In any case, DNS operators need to ensure
-        that they can emit and process large DNS responses when necessary,
+        that they can emit and process large DNS UDP responses when necessary,
         and a future migration to alternative transports like
         <xref target="RFC7858">DNS over TLS</xref> or
         <xref target="RFC8484">DNS over HTTPS</xref>
@@ -652,12 +654,24 @@
 
     <section anchor="Security" title="Security Considerations">
       <t>
+        The Multi Signer models necessarily involve 3rd party providers
+        holding the private keys that sign the zone owner's data.
+        Obviously this means that the zone owner has decided to place a
+        great deal of trust in these providers. By contrast, the more
+        traditional model in which the zone owner runs a hidden
+        master and uses zone transfer with the providers, is arguably
+        more secure, because only the zone owner holds the private signing
+        keys, and the 3rd party providers cannot serve bogus data without
+        detection by validating resolvers.
+      </t>
+      <t>
 	The Zone key import and export APIs required by these models
         need to be strongly authenticated to prevent tampering of key
         material by malicious third parties. Many providers today
-        offer REST/HTTPS APIs that utilize a number of authentication
-        mechanisms (username/password, API keys etc). If DNS
-        protocol mechanisms like UPDATE are being used for key
+        offer REST/HTTPS APIs, where the HTTPS layer provides transport
+        security and server authentication, and that utilize a number of
+        client authentication mechanisms (username/password, API keys etc).
+        If DNS protocol mechanisms like UPDATE are being used for key
         insertion and deletion, they should similarly be strongly
         authenticated, e.g. by employing <xref target="RFC2845">
         Transaction Signatures (TSIG)</xref>. Multi-factor
@@ -673,7 +687,7 @@
         The initial version of this document benefited from discussions
         with and review from Duane Wessels. Additional helpful comments
         were provided by Steve Crocker, Ulrich Wisser, Tony Finch, Olafur
-        Gudmundsson, and Matthijs Mekking.
+        Gudmundsson, Matthijs Mekking, Daniel Migault, and Ben Kaduk.
       </t>
     </section>
 
