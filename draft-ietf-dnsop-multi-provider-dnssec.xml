@@ -4,6 +4,8 @@
      There has to be one entity for each item to be referenced. 
      An alternate method (rfc include) is described in the references. -->
 
+<!ENTITY RFC1034 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.1034.xml">
+<!ENTITY RFC1035 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.1035.xml">
 <!ENTITY RFC1995 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.1995.xml">
 <!ENTITY RFC2136 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2136.xml">
 <!ENTITY RFC2845 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2845.xml">
@@ -142,24 +144,26 @@
         https://github.com/shuque/multi-provider-dnssec
       </t>
       <t>
-        Many enterprises today employ the service of multiple DNS
-        providers to distribute their authoritative DNS service. This
-        allows the DNS service to survive a complete failure of any
-        single provider. Additionally, enterprises or providers
-        occasionally have requirements that preclude standard zone
-        transfer techniques <xref target="RFC1995" />
-        <xref target="RFC5936" />
+        Many enterprises today employ the service of multiple Domain Name
+        System (DNS) <xref target="RFC1034" /> <xref target="RFC1035" />
+        providers to distribute their authoritative DNS service. This is
+        primarily done for redundancy and availability, and allows the DNS
+        service to survive a complete, catastrophic failure of any single
+        provider. Additionally, enterprises or providers occasionally have
+        requirements that preclude standard zone transfer techniques
+        <xref target="RFC1995" /> <xref target="RFC5936" />
         : either non-standardized DNS features are in use that are
         incompatible with zone transfer, or operationally a provider
-        must be able to (re)sign DNS records using their own keys. This
-        document outlines some possible models of DNSSEC
+        must be able to (re)sign DNS records using their own keys.
+        This document outlines some possible models of DNSSEC
         <xref target="RFC4033" /> <xref target="RFC4034" />
         <xref target="RFC4035" /> deployment in such an environment.
       </t>
       <t>
         This document assumes a reasonable level of familiarity with
         DNS operations and protocol terms. Much of the terminology
-        is explained in further detail in <xref target="RFC8499"/>.
+        is explained in further detail in <xref target="RFC8499">
+        DNS Terminology</xref>.
       </t>
 
 
@@ -168,12 +172,11 @@
     <section title="Deployment Models" anchor="models">
 
       <t>
-        If a zone owner is able to use standard zone transfer
-        techniques, then the presence of multiple providers does not
-        present any need to substantially modify normal deployment
-        models.  In these deployments there is a single signing entity
-        (which may be the zone owner, one of the providers, or a
-        separate entity), while the providers act as secondary
+        If a zone owner can use standard zone transfer techniques, then
+        the presence of multiple providers does not require modifications
+        to the normal deployment models. In these deployments, there is a
+        single signing entity (which may be the zone owner, one of the
+        providers, or a separate entity), while the providers act as secondary
         authoritative servers for the zone.
       </t>
 
@@ -196,9 +199,9 @@
         typically uses provider-specific APIs to update zone content
         identically at each of the providers, and relies on the provider
         to perform signing of the data. A key requirement here is to
-        manage the contents of the DNSKEY and DS RRset in such a way
-        that validating resolvers always have a viable path to
-        authenticate the DNSSEC signature chain no matter which
+        manage the contents of the DNSKEY and Delegation Signer (DS) RRsets
+        in such a way that validating resolvers always have a viable path
+        to authenticate the DNSSEC signature chain, no matter which
         provider is queried. This requirement is achieved by having
         each provider import the public Zone Signing Keys (ZSKs) of
         all other providers into their DNSKEY RRsets.
@@ -222,11 +225,20 @@
         In the models presented, the function of coordinating the DNSKEY or
         DS RRset does not involve the providers communicating directly with
         each other. Feedback from several commercial managed DNS providers
-        indicates that they may be unlikely to directly communicate since
+        indicates that they may be unlikely to directly communicate, since
         they typically have a contractual relationship only with the zone
         owner. However, if the parties involved are agreeable, it may be
         possible to devise a protocol mechanism by which the providers
-        directly communicate to share keys.
+        directly communicate to share keys. Details of such a protocol are
+        deferred to a future specification document, should there be interest.
+        </t>
+
+        <t>
+        In the descriptions below, the Key Signing Key (KSK), and Zone
+        Signing Key (ZSK), correspond to the definitions in
+        <xref target="RFC8499" />, with the caveat that the KSK not
+        only signs the zone apex DNSKEY RRset, but also serves as the
+        Secure Entry Point (SEP) into the zone.
         </t>
 
         <section title="Model 1: Common KSK set, Unique ZSK set per provider" anchor="model1">
@@ -234,9 +246,10 @@
         <list style="symbols">
         <t>The zone owner holds the KSK set, manages the DS record set,
            and is responsible for signing the DNSKEY RRset and distributing
-           the signed DNSKEY RRset to the providers.</t>
-        <t>Each provider has their own ZSK set which is used to sign data.</t>
-        <t>Providers have an API that the zone owner uses to query the ZSK
+           it to the providers.</t>
+        <t>Each provider has their own ZSK set which is used to sign data
+           in the zone.</t>
+        <t>The providers have an API that the zone owner uses to query the ZSK
            public keys, and insert a combined DNSKEY RRset that includes
            the ZSK sets of each provider, and the KSK set, signed by the KSK.</t>
         <t>Note that even if the contents of the DNSKEY RRset do not change,
@@ -247,11 +260,11 @@
            owner to update the DNSKEY RRset (for KSK or ZSK), and the
            DS RRset (for KSK).</t>
         <t>(One specific variant of this model that may be interesting is
-           a configuration in which there is only one provider. A possible
-           use case for this is where the zone owner wants to outsource the
-           signing and operation of their DNS zone to a single 3rd party
-           provider, but still control the KSK, so that they can authorize
-           and/or revoke the use of specific zone signing keys.)</t>
+           a configuration in which there is only a single provider. A
+           possible use case for this is where the zone owner wants to
+           outsource the signing and operation of their DNS zone to a single
+           3rd party provider, but still control the KSK, so that they can
+           authorize and/or revoke the use of specific zone signing keys.)</t>
         </list>
         </t>
         </section>
@@ -289,10 +302,11 @@
         two providers A and B):
 
         <list style="symbols">
-        <t>The validating resolver follows a referral (delegation) to the
-        zone in question.</t>
+        <t>The validating resolver follows a referral (i.e. secure delegation)
+        to the zone in question.</t>
         <t>It retrieves the zone's DNSKEY RRset from one of provider
-        A's nameservers, authenticates and caches it.</t>
+        A's nameservers, authenticates it against the parent DS RRset,
+        and caches it.</t>
         <t>At some point in time, the resolver attempts to resolve a
         name in the zone, while the DNSKEY RRset received from provider A
         is still viable in its cache.</t>
@@ -443,7 +457,11 @@
         strategy is for the zone owner to initiate key rollover
         operations. But other operationally plausible models may also
         suit, such as a DNS provider initiating a key rollover and
-        signaling their intent to the zone owner in some manner.
+        signaling their intent to the zone owner in some manner. The
+        mechanism to communicate this intent could be some secure
+        out-of-band channel that has been agreed upon, or the provider
+        could offer an API function that could be periodically polled
+        by the zone owner.
       </t>
       <t>
         The descriptions in this section assume two DNS providers
@@ -476,7 +494,7 @@
           is then transferred to each provider. The zone owner then updates
           the DS RRset in the parent zone to point to the new KSK, and after
           the necessary DS record TTL period has expired, proceeds with
-          updating the DNSKEY RRSet to remove the old KSK.
+          updating the DNSKEY RRset to remove the old KSK.
         </t>
         <t>
           Zone Signing Key Rollover: In this model, each DNS provider has
@@ -485,10 +503,7 @@
           would generate a new ZSK and communicate their intent to perform a
           rollover (note that Provider A cannot immediately insert this new
           ZSK into their DNSKEY RRset because the RRset has to be signed by
-          the zone owner). The mechanism to communicate this intent could be
-          some secure out-of-band channel that has been agreed upon, or the
-          provider could offer an API function that could be periodically
-          polled by the zone owner. The zone owner obtains the new ZSK from
+          the zone owner). The zone owner obtains the new ZSK from
           Provider A. It then obtains the current DNSKEY RRset from each
           provider (including Provider A), inserts the new ZSK into each DNSKEY
           RRset, re-signs the DNSKEY RRset, and sends it back to each provider
@@ -497,7 +512,8 @@
           re-signed by the new ZSK and propagated to all authoritative servers
           for the zone, plus the maximum zone TTL value of any of the data in
           the zone signed by the old ZSK), Provider A and the zone owner can
-          initiate the next phase of removing the old ZSK.
+          initiate the next phase of removing the old ZSK, and re-signing the
+          resulting new DNSKEY RRset.
         </t>
         </list>
         </t>
@@ -628,21 +644,19 @@
 
     <section anchor="Response-Size" title="DNS Response Size Considerations">
       <t>
-        The Multi-Signer models described in this document result in
-        larger DNSKEY RRsets, so the DNSKEY response size will be
-        larger. The actual size depends on multiple factors: DNSKEY
-        algorithm and keysize choices, the number of providers, whether
-        additional keys are pre-published, how many simultaneous key
-        rollovers are in progress etc. Newer elliptic curve algorithms
-        produce keys small enough that the responses will typically be far
-        below the common Internet path MTU. Thus operational concerns
-        related to IP fragmentation or truncation and TCP fallback are
-        unlikely to be encountered. In any case, DNS operators need to ensure
-        that they can emit and process large DNS UDP responses when necessary,
-        and a future migration to alternative transports like
-        <xref target="RFC7858">DNS over TLS</xref> or
-        <xref target="RFC8484">DNS over HTTPS</xref>
-        may make this topic moot.
+        The Multi-Signer models result in larger DNSKEY RRsets, so the size
+        of a response to a query for the DNSKEY RRset will be larger. The
+        actual size increase depends on multiple factors: DNSKEY algorithm
+        and keysize choices, the number of providers, whether additional keys
+        are pre-published, how many simultaneous key rollovers are in progress
+        etc. Newer elliptic curve algorithms produce keys small enough that the
+        responses will typically be far below the common Internet path MTU.
+        Thus operational concerns related to IP fragmentation or truncation
+        and TCP fallback are unlikely to be encountered. In any case, DNS
+        operators need to ensure that they can emit and process large DNS UDP
+        responses when necessary, and a future migration to alternative
+        transports like <xref target="RFC7858">DNS over TLS</xref> or
+        <xref target="RFC8484">DNS over HTTPS</xref> may make this topic moot.
       </t>
     </section>
 
@@ -655,14 +669,14 @@
     <section anchor="Security" title="Security Considerations">
       <t>
         The Multi Signer models necessarily involve 3rd party providers
-        holding the private keys that sign the zone owner's data.
-        Obviously this means that the zone owner has decided to place a
-        great deal of trust in these providers. By contrast, the more
-        traditional model in which the zone owner runs a hidden
-        master and uses zone transfer with the providers, is arguably
-        more secure, because only the zone owner holds the private signing
-        keys, and the 3rd party providers cannot serve bogus data without
-        detection by validating resolvers.
+        holding the private keys that sign the zone owner's data. Obviously
+        this means that the zone owner has decided to place a great deal
+        of trust in these providers. By contrast, the more traditional
+        model in which the zone owner runs a hidden master and uses the zone
+        transfer protocol with the providers, is arguably more secure, because
+        only the zone owner holds the private signing keys, and the 3rd party
+        providers cannot serve bogus data without detection by validating
+        resolvers.
       </t>
       <t>
 	The Zone key import and export APIs required by these models
@@ -698,6 +712,8 @@
 
   <back>
     <references title="Normative References">
+      &RFC1034;
+      &RFC1035;
       &RFC2845;
       &RFC4033;
       &RFC4034;
