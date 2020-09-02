@@ -19,6 +19,13 @@
     <author fullname="Shumon Huque" initials="S." surname="Huque">
       <organization>Salesforce</organization>
       <address>
+        <postal>
+          <street>415 Mission Street, 3rd Floor</street>
+          <city>San Francisco</city>
+          <region>CA</region>
+          <code>94105</code>
+          <country>United States of America</country>
+        </postal>
         <email>shuque@gmail.com</email>
 
       </address>
@@ -26,6 +33,13 @@
     <author fullname="Pallavi Aras" initials="P." surname="Aras">
       <organization>Salesforce</organization>
       <address>
+        <postal>
+          <street>415 Mission Street, 3rd Floor</street>
+          <city>San Francisco</city>
+          <region>CA</region>
+          <code>94105</code>
+          <country>United States of America</country>
+        </postal>
         <email>paras@salesforce.com</email>
 
       </address>
@@ -33,6 +47,14 @@
     <author fullname="John Dickinson" initials="J." surname="Dickinson">
       <organization>Sinodun</organization>
       <address>
+        <postal>
+          <street>Magdalen Centre</street>
+          <street>Robert Robertson Ave</street>
+          <city>Oxford</city>
+          <region>Oxfordshire</region>
+          <code>OX4 4GA</code>
+          <country>United Kingdom</country>
+        </postal>
         <email>jad@sinodun.com</email>
 
       </address>
@@ -40,6 +62,13 @@
     <author fullname="Jan Vcelak" initials="J." surname="Vcelak">
       <organization>NS1</organization>
       <address>
+        <postal>
+          <street>55 Broad Street, 19th Floor</street>
+          <city>New York</city>
+          <region>NY</region>
+          <code>10004</code>
+          <country>United States of America</country>
+        </postal>
         <email>jvcelak@ns1.com</email>
 
       </address>
@@ -47,6 +76,13 @@
     <author fullname="David Blacka" initials="D." surname="Blacka">
       <organization>Verisign</organization>
       <address>
+        <postal>
+          <street>12061 Bluemont Way</street>
+          <city>Reston</city>
+          <region>VA</region>
+          <code>20190</code>
+          <country>United States of America</country>
+        </postal>
         <email>davidb@verisign.com</email>
 
       </address>
