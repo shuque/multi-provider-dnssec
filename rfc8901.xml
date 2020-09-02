@@ -556,7 +556,7 @@
       <t>
         Managed-DNS providers typically have their own proprietary zone
         configuration and data-management APIs, commonly utilizing
-        HTTPS or Representational State Transfer (REST) interfaces. So, rather
+        HTTPS and Representational State Transfer (REST) interfaces. So, rather
 	than outlining a new API for
         key management here, we describe the specific functions that the
         provider API needs to support in order to enable the multi-signer
