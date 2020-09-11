@@ -465,9 +465,9 @@
           necessary time period has elapsed (i.e., all zone data has been
           re-signed by the new ZSK and propagated to all authoritative servers
           for the zone, plus the maximum zone-TTL value of any of the data in
-          the zone has been signed by the old ZSK), Provider A and the zone owner can
-          initiate the next phase of removing the old ZSK and re-signing the
-          resulting new DNSKEY RRset.
+          the zone that has been signed by the old ZSK), Provider A and the
+          zone owner can initiate the next phase of removing the old ZSK and
+          re-signing the resulting new DNSKEY RRset.
         </li>
         </ul>
       </section>
@@ -630,12 +630,12 @@
         offer REST/HTTPS APIs that utilize a number of
         client-authentication mechanisms (username/password, API keys etc) and
 	whose HTTPS layer provides transport
-        security and server authentication.
+        security and server authentication.  Multifactor
+        authentication could be used to further strengthen security.
         If DNS protocol mechanisms like UPDATE are being used for key
         insertion and deletion, they should similarly be strongly
         authenticated -- e.g., by employing <xref target="RFC2845" format="default">
-        Transaction Signatures (TSIG)</xref>. Multifactor
-        authentication could be used to further strengthen security.
+        Transaction Signatures (TSIG)</xref>.
         Key generation and other general security-related operations
         should follow the guidance specified in <xref target="RFC6781" format="default"/>.
       </t>
